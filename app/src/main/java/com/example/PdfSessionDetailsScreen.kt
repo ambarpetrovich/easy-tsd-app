@@ -46,6 +46,7 @@ fun PdfSessionDetailsScreen(
 
     var showFiles by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableIntStateOf(0) } // 0 - flat, 1 - grouped
+    var showCancelAccountingDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -302,12 +303,20 @@ fun PdfSessionDetailsScreen(
                             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                             colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                         ) {
-                            Text(
-                                "Сессия принята к учету: ${currentAccounting.displayName}",
-                                modifier = Modifier.padding(16.dp),
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSecondaryContainer
-                            )
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(16.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    "Учтено: ${currentAccounting.displayName}",
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSecondaryContainer
+                                )
+                                TextButton(onClick = { showCancelAccountingDialog = true }) {
+                                    Text("Отменить")
+                                }
+                            }
                         }
                     }
 
@@ -343,6 +352,16 @@ fun PdfSessionDetailsScreen(
                 }
             }
         }
+    }
+
+    if (showCancelAccountingDialog) {
+        com.example.ui.components.CancelAccountingDialog(
+            onConfirm = {
+                accountingViewModel.cancelAccounting(sessionId)
+                showCancelAccountingDialog = false
+            },
+            onDismiss = { showCancelAccountingDialog = false }
+        )
     }
 }
 

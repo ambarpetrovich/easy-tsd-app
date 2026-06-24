@@ -56,4 +56,9 @@ class AccountingViewModel : ViewModel() {
         _operations.update { it + newOps }
         _sessionAccountingStatus.update { it + (sessionId to type) }
     }
+
+    fun cancelAccounting(sessionId: String) {
+        _operations.update { ops -> ops.filter { it.sessionId != sessionId } }
+        _sessionAccountingStatus.update { status -> status - sessionId }
+    }
 }

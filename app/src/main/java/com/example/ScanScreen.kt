@@ -40,7 +40,12 @@ fun ScanScreen(
         if (initialSessionId != null) {
             scanViewModel.selectSession(initialSessionId)
         } else {
-            scanViewModel.createOrGetSession() // Ensure we have a session to scan into
+            val latestSession = scanViewModel.sessions.value.firstOrNull()
+            if (latestSession != null && !accountingViewModel.sessionAccountingStatus.value.containsKey(latestSession.id)) {
+                scanViewModel.selectSession(latestSession.id)
+            } else {
+                scanViewModel.createNewSession()
+            }
         }
     }
     
@@ -50,6 +55,7 @@ fun ScanScreen(
     val tabs = listOf("Общий список", "По товарам")
 
     var showAccountingDialog by remember { mutableStateOf(false) }
+    var showCancelAccountingDialog by remember { mutableStateOf(false) }
 
     val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
     val currentId = scanViewModel.currentSessionId.collectAsState().value
@@ -93,12 +99,20 @@ fun ScanScreen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                 ) {
-                    Text(
-                        "Сессия принята к учету: ${currentAccounting.displayName}",
-                        modifier = Modifier.padding(16.dp),
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            "Учтено: ${currentAccounting.displayName}",
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                        TextButton(onClick = { showCancelAccountingDialog = true }) {
+                            Text("Отменить")
+                        }
+                    }
                 }
             }
 
@@ -120,10 +134,19 @@ fun ScanScreen(
             
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 
+                Button(
+                    onClick = { scanViewModel.createNewSession() },
+                    modifier = Modifier.weight(1f).height(56.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer, contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
+                ) {
+                    Text("НОВАЯ", fontWeight = FontWeight.Black)
+                }
+
                 if (currentAccounting != null) {
                     SuggestionChip(
                         onClick = { },
-                        label = { Text(currentAccounting.displayName, fontWeight = FontWeight.Bold) },
+                        label = { Text("УЧТЕНО", fontWeight = FontWeight.Black) },
                         modifier = Modifier.weight(1f).height(56.dp),
                         colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
                     )
@@ -140,7 +163,7 @@ fun ScanScreen(
                 
                 var showExportMenu by remember { mutableStateOf(false) }
                 
-                Box(modifier = Modifier.weight(2f)) {
+                Box(modifier = Modifier.weight(1.5f)) {
                     Button(
                         onClick = { showExportMenu = true },
                         modifier = Modifier.fillMaxWidth().height(56.dp),
@@ -151,8 +174,8 @@ fun ScanScreen(
                         )
                     ) {
                         Icon(Icons.Default.Check, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("ЗАВЕРШИТЬ / ЭКСПОРТ", fontWeight = FontWeight.Black)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("ЭКСПОРТ", fontWeight = FontWeight.Black, maxLines = 1)
                     }
                     
                     DropdownMenu(
@@ -180,6 +203,16 @@ fun ScanScreen(
         )
     } else if (showAccountingDialog) {
         showAccountingDialog = false
+    }
+    
+    if (showCancelAccountingDialog && currentId != null) {
+        com.example.ui.components.CancelAccountingDialog(
+            onConfirm = {
+                accountingViewModel.cancelAccounting(currentId)
+                showCancelAccountingDialog = false
+            },
+            onDismiss = { showCancelAccountingDialog = false }
+        )
     }
 }
 

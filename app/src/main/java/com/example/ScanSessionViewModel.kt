@@ -43,15 +43,20 @@ class ScanSessionViewModel : ViewModel() {
         return _sessions.value.find { it.id == id }?.scannedCodes ?: emptyList()
     }
     
+    fun createNewSession(): String {
+        val id = UUID.randomUUID().toString()
+        val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+        val dateStr = format.format(Date())
+        val session = FreeScanSession(id, "Свободное сканирование", dateStr, emptyList())
+        _sessions.update { listOf(session) + it }
+        _currentSessionId.value = id
+        return id
+    }
+
     fun createOrGetSession(): String {
         var id = _currentSessionId.value
         if (id == null) {
-            id = UUID.randomUUID().toString()
-            val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
-            val dateStr = format.format(Date())
-            val session = FreeScanSession(id, "Свободное сканирование", dateStr, emptyList())
-            _sessions.update { listOf(session) + it }
-            _currentSessionId.value = id
+            id = createNewSession()
         }
         return id
     }
