@@ -51,10 +51,10 @@ fun PdfSessionDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(session?.title ?: "Детали сессии", fontWeight = FontWeight.Black) },
+                title = { Text(session?.title ?: androidx.compose.ui.res.stringResource(com.example.R.string.str_183), fontWeight = FontWeight.Black) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 actions = {
@@ -62,31 +62,31 @@ fun PdfSessionDetailsScreen(
                         var showExportMenu by remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { showExportMenu = true }) {
-                                Icon(Icons.Default.FileDownload, contentDescription = "Экспорт")
+                                Icon(Icons.Default.FileDownload, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_182))
                             }
                             DropdownMenu(
                                 expanded = showExportMenu,
                                 onDismissRequest = { showExportMenu = false }
                             ) {
-                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_54)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToCsv(context, it, "export_csv") }
                                     }
                                 })
-                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_53)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToXlsxLike(context, it, "export_xlsx") }
                                     }
                                 })
-                                DropdownMenuItem(text = { Text("В JSON") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_181)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToJson(context, it, "export_json") }
                                     }
                                 })
-                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_52)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToXmlUpd(context, it, "export_upd") }
@@ -124,9 +124,9 @@ fun PdfSessionDetailsScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Статус: ${session!!.status.displayName}")
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_180, androidx.compose.ui.res.stringResource(session!!.status.displayNameRes)))
                             if (session!!.status == PdfSessionStatus.COMPLETED) {
-                                Text("Распознано: ${session!!.totalCodes} кодов", fontWeight = FontWeight.Bold)
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_179, session!!.totalCodes), fontWeight = FontWeight.Bold)
                             }
                         }
 
@@ -148,12 +148,12 @@ fun PdfSessionDetailsScreen(
                                             horizontalArrangement = Arrangement.SpaceBetween,
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Text("${session!!.files.size} файлов", fontWeight = FontWeight.Bold)
+                                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_178, session!!.files.size), fontWeight = FontWeight.Bold)
                                             Icon(if (showFiles) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                                         }
                                     } else {
                                         Box(modifier = Modifier.padding(16.dp)) {
-                                            Text("Файлы сессии:", fontWeight = FontWeight.Bold)
+                                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_177), fontWeight = FontWeight.Bold)
                                         }
                                     }
                                     
@@ -170,7 +170,7 @@ fun PdfSessionDetailsScreen(
                                                         color = fileColors[index % fileColors.size],
                                                         fontWeight = FontWeight.Bold
                                                     )
-                                                    Text("${file.pages} стр., ${file.codesCount} кодов", style = MaterialTheme.typography.bodySmall)
+                                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_176, file.pages, file.codesCount), style = MaterialTheme.typography.bodySmall)
                                                 }
                                             }
                                         }
@@ -196,7 +196,7 @@ fun PdfSessionDetailsScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Исходные данные", fontWeight = FontWeight.Bold)
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_175), fontWeight = FontWeight.Bold)
                                 Icon(if (showSourceData) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                             }
                             AnimatedVisibility(visible = showSourceData) {
@@ -218,12 +218,12 @@ fun PdfSessionDetailsScreen(
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
-                            Text("Сверка")
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_174))
                         }
                         if (currentAccounting != null) {
                             SuggestionChip(
                                 onClick = { },
-                                label = { Text(currentAccounting.displayName, fontWeight = FontWeight.Bold) },
+                                label = { Text(androidx.compose.ui.res.stringResource(currentAccounting.displayNameRes), fontWeight = FontWeight.Bold) },
                                 modifier = Modifier.weight(1f),
                                 colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
                             )
@@ -233,14 +233,14 @@ fun PdfSessionDetailsScreen(
                                 modifier = Modifier.weight(1f),
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                             ) {
-                                Text("Учет")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_172))
                             }
                         }
                     }
                 } else if (session!!.type == PdfSessionType.INVENTORY) {
                     Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Режим: Сверка",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.str_173),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
@@ -248,7 +248,7 @@ fun PdfSessionDetailsScreen(
                         if (currentAccounting != null) {
                             SuggestionChip(
                                 onClick = { },
-                                label = { Text(currentAccounting.displayName, fontWeight = FontWeight.Bold) },
+                                label = { Text(androidx.compose.ui.res.stringResource(currentAccounting.displayNameRes), fontWeight = FontWeight.Bold) },
                                 colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
                             )
                         } else {
@@ -256,7 +256,7 @@ fun PdfSessionDetailsScreen(
                                 onClick = { showAccountingDialog = true },
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                             ) {
-                                Text("Учет")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_172))
                             }
                         }
                     }
@@ -267,7 +267,7 @@ fun PdfSessionDetailsScreen(
                     Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(progress = { session!!.progress })
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Распознавание... ${(session!!.progress * 100).toInt()}%")
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_171, (session!!.progress * 100).toInt()))
                     }
                 }
 
@@ -309,12 +309,12 @@ fun PdfSessionDetailsScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    "Учтено: ${currentAccounting.displayName}",
+                                    androidx.compose.ui.res.stringResource(com.example.R.string.str_60, androidx.compose.ui.res.stringResource(currentAccounting!!.displayNameRes)),
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
                                 TextButton(onClick = { showCancelAccountingDialog = true }) {
-                                    Text("Отменить")
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_59))
                                 }
                             }
                         }
@@ -324,18 +324,18 @@ fun PdfSessionDetailsScreen(
                         Tab(
                             selected = selectedTab == 0,
                             onClick = { selectedTab = 0 },
-                            text = { Text("Плоский список") }
+                            text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_170)) }
                         )
                         Tab(
                             selected = selectedTab == 1,
                             onClick = { selectedTab = 1 },
-                            text = { Text("По GTIN") }
+                            text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_169)) }
                         )
                         if (session!!.type == PdfSessionType.INVENTORY) {
                             Tab(
                                 selected = selectedTab == 2,
                                 onClick = { selectedTab = 2 },
-                                text = { Text("Отсканированные") }
+                                text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_168)) }
                             )
                         }
                     }
@@ -423,14 +423,14 @@ fun ScannedCodesList(codes: List<ScannedCode>, onNavigateToProduct: (String, Str
                             if (gtin.isNotEmpty()) {
                                 val product by productsViewModel.getProductByGtin(gtin).collectAsState(initial = null)
                                 if (product != null) {
-                                    Text("Товар: ${product!!.product.name}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_167, product!!.product.name), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
                                     Button(onClick = { onNavigateToProduct(gtin, "view") }, modifier = Modifier.padding(top = 8.dp)) {
-                                        Text("Открыть товар")
+                                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_49))
                                     }
                                 } else {
-                                    Text("Товар не найден", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_48), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
                                     Button(onClick = { onNavigateToProduct(gtin, "create") }, modifier = Modifier.padding(top = 8.dp)) {
-                                        Text("Добавить товар")
+                                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                                     }
                                 }
                             }
@@ -517,9 +517,9 @@ fun GroupedCodesList(codes: List<RecognizedCode>, scannedCodes: List<ScannedCode
                                 if (product != null) {
                                     Text(product!!.product.name, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
                                 } else {
-                                    Text("Товар не найден", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_48), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                                 }
-                                Text("Кодов: ${gtinCodes.size}" + if (scannedCodes.isNotEmpty()) " (Отсканировано: $scannedGtinCount)" else "", style = MaterialTheme.typography.bodySmall)
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_51, gtinCodes.size) + if (scannedCodes.isNotEmpty()) androidx.compose.ui.res.stringResource(com.example.R.string.str_166, scannedCodes.size) else "", style = MaterialTheme.typography.bodySmall)
                             }
                             Icon(if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                         }
@@ -534,7 +534,7 @@ fun GroupedCodesList(codes: List<RecognizedCode>, scannedCodes: List<ScannedCode
                                         contentColor = if (product != null) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onPrimary
                                     )
                                 ) {
-                                    Text(if (product != null) "Открыть товар" else "Добавить товар")
+                                    Text(if (product != null) androidx.compose.ui.res.stringResource(com.example.R.string.str_49) else androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                                 }
                                 gtinCodes.forEach { code ->
                                     val scans = scannedCodes.filter { it.normalizedCode == code.normalizedCode }
@@ -593,7 +593,7 @@ fun CodeItemCard(code: RecognizedCode, scans: List<ScannedCode>, onNavigateToPro
                         ),
                         modifier = Modifier.align(Alignment.End)
                     ) {
-                        Text(if (product != null) "Открыть товар" else "Добавить товар")
+                        Text(if (product != null) androidx.compose.ui.res.stringResource(com.example.R.string.str_49) else androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                     }
                 }
             }
@@ -658,7 +658,7 @@ fun HighlightedNormalizedCode(code: RecognizedCode, scans: List<ScannedCode>, fi
                 )
             } else {
                 Text(
-                    text = "НЕТ В УПД",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.str_165),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(start = 8.dp)
@@ -668,7 +668,7 @@ fun HighlightedNormalizedCode(code: RecognizedCode, scans: List<ScannedCode>, fi
 
         if (scans.isNotEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Отсканирован: ${scans.size} раз", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary)
+            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_164, scans.size), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary)
             scans.forEach { scan ->
                 val dateStr = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(scan.timestamp))
                 Text(text = " - $dateStr", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
@@ -683,12 +683,12 @@ fun HighlightedNormalizedCode(code: RecognizedCode, scans: List<ScannedCode>, fi
             confirmButton = {
                 TextButton(onClick = { showFileInfo = false }) { Text("OK") }
             },
-            title = { Text("Информация о файле") },
+            title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_163)) },
             text = {
                 Column {
-                    Text("Файл: ${truncateMiddle(fileName, 30)}")
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_162, truncateMiddle(fileName, 30)))
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("Страница: ${code.pageNumber}")
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_161, code.pageNumber))
                 }
             }
         )

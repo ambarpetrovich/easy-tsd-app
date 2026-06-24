@@ -45,10 +45,10 @@ fun ImportSessionDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(session?.title ?: "Детали импорта", fontWeight = FontWeight.Black) },
+                title = { Text(session?.title ?: androidx.compose.ui.res.stringResource(com.example.R.string.str_199), fontWeight = FontWeight.Black) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 actions = {
@@ -56,31 +56,31 @@ fun ImportSessionDetailsScreen(
                         var showExportMenu by remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { showExportMenu = true }) {
-                                Icon(Icons.Default.FileDownload, contentDescription = "Экспорт")
+                                Icon(Icons.Default.FileDownload, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_182))
                             }
                             DropdownMenu(
                                 expanded = showExportMenu,
                                 onDismissRequest = { showExportMenu = false }
                             ) {
-                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_54)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToCsv(context, it, "export_csv") }
                                     }
                                 })
-                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_53)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToXlsxLike(context, it, "export_xlsx") }
                                     }
                                 })
-                                DropdownMenuItem(text = { Text("В JSON") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_181)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToJson(context, it, "export_json") }
                                     }
                                 })
-                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { 
+                                DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_52)) }, onClick = { 
                                     showExportMenu = false
                                     session?.let { 
                                         coroutineScope.launch { ExportService.exportToXmlUpd(context, it, "export_upd") }
@@ -118,9 +118,9 @@ fun ImportSessionDetailsScreen(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Статус: ${session!!.status.displayName}")
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_180, androidx.compose.ui.res.stringResource(session!!.status.displayNameRes)))
                             if (session!!.status == ImportSessionStatus.COMPLETED) {
-                                Text("Распознано: ${session!!.totalCodes} кодов", fontWeight = FontWeight.Bold)
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_179, session!!.totalCodes), fontWeight = FontWeight.Bold)
                             }
                         }
 
@@ -142,12 +142,12 @@ fun ImportSessionDetailsScreen(
                                             horizontalArrangement = Arrangement.SpaceBetween,
                                             verticalAlignment = Alignment.CenterVertically
                                         ) {
-                                            Text("${session!!.files.size} файлов", fontWeight = FontWeight.Bold)
+                                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_178, session!!.files.size), fontWeight = FontWeight.Bold)
                                             Icon(if (showFiles) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                                         }
                                     } else {
                                         Box(modifier = Modifier.padding(16.dp)) {
-                                            Text("Файлы сессии:", fontWeight = FontWeight.Bold)
+                                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_177), fontWeight = FontWeight.Bold)
                                         }
                                     }
                                     
@@ -164,7 +164,7 @@ fun ImportSessionDetailsScreen(
                                                         color = fileColors[index % fileColors.size],
                                                         fontWeight = FontWeight.Bold
                                                     )
-                                                    val labelType = if (file.type == "xml" || file.type == "json") "элементов" else "строк"
+                                                    val labelType = if (file.type == "xml" || file.type == "json") androidx.compose.ui.res.stringResource(com.example.R.string.str_198) else androidx.compose.ui.res.stringResource(com.example.R.string.str_197)
                                                     Text("${file.itemsCount} $labelType", style = MaterialTheme.typography.bodySmall)
                                                 }
                                             }
@@ -191,7 +191,7 @@ fun ImportSessionDetailsScreen(
                                 horizontalArrangement = Arrangement.SpaceBetween,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text("Исходные данные", fontWeight = FontWeight.Bold)
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_175), fontWeight = FontWeight.Bold)
                                 Icon(if (showSourceData) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                             }
                             AnimatedVisibility(visible = showSourceData) {
@@ -213,12 +213,12 @@ fun ImportSessionDetailsScreen(
                             modifier = Modifier.weight(1f),
                             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                         ) {
-                            Text("Сверка")
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_174))
                         }
                         if (currentAccounting != null) {
                             SuggestionChip(
                                 onClick = { },
-                                label = { Text(currentAccounting.displayName, fontWeight = FontWeight.Bold) },
+                                label = { Text(androidx.compose.ui.res.stringResource(currentAccounting.displayNameRes), fontWeight = FontWeight.Bold) },
                                 modifier = Modifier.weight(1f),
                                 colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
                             )
@@ -228,14 +228,14 @@ fun ImportSessionDetailsScreen(
                                 modifier = Modifier.weight(1f),
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                             ) {
-                                Text("Учет")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_172))
                             }
                         }
                     }
                 } else if (session!!.type == ImportSessionType.INVENTORY) {
                     Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Режим: Сверка",
+                            text = androidx.compose.ui.res.stringResource(com.example.R.string.str_173),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
@@ -243,7 +243,7 @@ fun ImportSessionDetailsScreen(
                         if (currentAccounting != null) {
                             SuggestionChip(
                                 onClick = { },
-                                label = { Text(currentAccounting.displayName, fontWeight = FontWeight.Bold) },
+                                label = { Text(androidx.compose.ui.res.stringResource(currentAccounting.displayNameRes), fontWeight = FontWeight.Bold) },
                                 colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
                             )
                         } else {
@@ -251,7 +251,7 @@ fun ImportSessionDetailsScreen(
                                 onClick = { showAccountingDialog = true },
                                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                             ) {
-                                Text("Учет")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_172))
                             }
                         }
                     }
@@ -262,7 +262,7 @@ fun ImportSessionDetailsScreen(
                     Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(progress = { session!!.progress })
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Обработка... ${(session!!.progress * 100).toInt()}%")
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_196, (session!!.progress * 100).toInt()))
                     }
                 }
 
@@ -303,12 +303,12 @@ fun ImportSessionDetailsScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    "Учтено: ${currentAccounting.displayName}",
+                                    androidx.compose.ui.res.stringResource(com.example.R.string.str_60, androidx.compose.ui.res.stringResource(currentAccounting!!.displayNameRes)),
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer
                                 )
                                 TextButton(onClick = { showCancelAccountingDialog = true }) {
-                                    Text("Отменить")
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_59))
                                 }
                             }
                         }
@@ -318,18 +318,18 @@ fun ImportSessionDetailsScreen(
                         Tab(
                             selected = selectedTab == 0,
                             onClick = { selectedTab = 0 },
-                            text = { Text("Плоский список") }
+                            text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_170)) }
                         )
                         Tab(
                             selected = selectedTab == 1,
                             onClick = { selectedTab = 1 },
-                            text = { Text("По GTIN") }
+                            text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_169)) }
                         )
                         if (session!!.type == ImportSessionType.INVENTORY) {
                             Tab(
                                 selected = selectedTab == 2,
                                 onClick = { selectedTab = 2 },
-                                text = { Text("Отсканированные") }
+                                text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_168)) }
                             )
                         }
                     }
@@ -415,14 +415,14 @@ fun ImportScannedCodesList(codes: List<ImportScannedCode>, onNavigateToProduct: 
                             if (gtin.isNotEmpty()) {
                                 val product by productsViewModel.getProductByGtin(gtin).collectAsState(initial = null)
                                 if (product != null) {
-                                    Text("Товар: ${product!!.product.name}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_167, product!!.product.name), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
                                     Button(onClick = { onNavigateToProduct(gtin, "view") }, modifier = Modifier.padding(top = 8.dp)) {
-                                        Text("Открыть товар")
+                                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_49))
                                     }
                                 } else {
-                                    Text("Товар не найден", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_48), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
                                     Button(onClick = { onNavigateToProduct(gtin, "create") }, modifier = Modifier.padding(top = 8.dp)) {
-                                        Text("Добавить товар")
+                                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                                     }
                                 }
                             }
@@ -508,9 +508,9 @@ fun ImportGroupedCodesList(codes: List<ImportRecognizedCode>, scannedCodes: List
                                 if (product != null) {
                                     Text(product!!.product.name, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
                                 } else {
-                                    Text("Товар не найден", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_48), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                                 }
-                                Text("Кодов: ${gtinCodes.size}" + if (scannedCodes.isNotEmpty()) " (Отсканировано: $scannedGtinCount)" else "", style = MaterialTheme.typography.bodySmall)
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_51, gtinCodes.size) + if (scannedCodes.isNotEmpty()) androidx.compose.ui.res.stringResource(com.example.R.string.str_166, scannedCodes.size) else "", style = MaterialTheme.typography.bodySmall)
                             }
                             Icon(if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                         }
@@ -525,7 +525,7 @@ fun ImportGroupedCodesList(codes: List<ImportRecognizedCode>, scannedCodes: List
                                         contentColor = if (product != null) MaterialTheme.colorScheme.onSecondaryContainer else MaterialTheme.colorScheme.onPrimary
                                     )
                                 ) {
-                                    Text(if (product != null) "Открыть товар" else "Добавить товар")
+                                    Text(if (product != null) androidx.compose.ui.res.stringResource(com.example.R.string.str_49) else androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                                 }
                                 gtinCodes.forEach { code ->
                                     val scans = scannedCodes.filter { it.normalizedCode == code.normalizedCode }
@@ -584,7 +584,7 @@ fun ImportCodeItemCard(code: ImportRecognizedCode, scans: List<ImportScannedCode
                         ),
                         modifier = Modifier.align(Alignment.End)
                     ) {
-                        Text(if (product != null) "Открыть товар" else "Добавить товар")
+                        Text(if (product != null) androidx.compose.ui.res.stringResource(com.example.R.string.str_49) else androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                     }
                 }
             }
@@ -642,7 +642,7 @@ fun ImportHighlightedNormalizedCode(code: ImportRecognizedCode, scans: List<Impo
                 )
             } else {
                 Text(
-                    text = "НЕТ В УПД",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.str_165),
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(start = 8.dp)
@@ -652,7 +652,7 @@ fun ImportHighlightedNormalizedCode(code: ImportRecognizedCode, scans: List<Impo
 
         if (scans.isNotEmpty()) {
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Отсканирован: ${scans.size} раз", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary)
+            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_164, scans.size), style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary)
             scans.forEach { scan ->
                 val dateStr = java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date(scan.timestamp))
                 Text(text = " - $dateStr", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f))
@@ -663,17 +663,17 @@ fun ImportHighlightedNormalizedCode(code: ImportRecognizedCode, scans: List<Impo
     if (showFileInfo) {
         val file = files.getOrNull(code.fileIndex)
         val fileName = file?.name ?: "Unknown"
-        val itemTypeLabel = if (file?.type == "xml" || file?.type == "json") "Индекс" else "Строка"
+        val itemTypeLabel = if (file?.type == "xml" || file?.type == "json") androidx.compose.ui.res.stringResource(com.example.R.string.str_195) else androidx.compose.ui.res.stringResource(com.example.R.string.str_194)
         
         AlertDialog(
             onDismissRequest = { showFileInfo = false },
             confirmButton = {
                 TextButton(onClick = { showFileInfo = false }) { Text("OK") }
             },
-            title = { Text("Информация о файле") },
+            title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_163)) },
             text = {
                 Column {
-                    Text("Файл: ${truncateMiddle(fileName, 30)}")
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_162, truncateMiddle(fileName, 30)))
                     Spacer(modifier = Modifier.height(4.dp))
                     Text("$itemTypeLabel: ${code.itemIndex}")
                 }

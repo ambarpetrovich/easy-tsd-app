@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Article
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Category
@@ -23,6 +24,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -38,13 +40,13 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel = viewModel()
 ) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
-    val tabs = listOf("Системные", "Прикладные")
+    val tabs = listOf(androidx.compose.ui.res.stringResource(com.example.R.string.str_102), androidx.compose.ui.res.stringResource(com.example.R.string.str_101))
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { 
-                    Text("Настройки", fontWeight = FontWeight.Black) 
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_100), fontWeight = FontWeight.Black) 
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.secondary,
@@ -105,40 +107,73 @@ fun SystemSettingsSection(onNavigateToHistory: () -> Unit, settingsViewModel: Se
     val defaultScanner by settingsViewModel.defaultScannerMode.collectAsState()
     
     SettingsCard(
-        title = "О приложении",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_99),
         icon = Icons.Default.History,
         onClick = onNavigateToHistory
     ) {
         Text(
-            text = "История версий",
+            text = androidx.compose.ui.res.stringResource(com.example.R.string.str_69),
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.primary,
             fontWeight = FontWeight.Bold
         )
     }
 
+    var showLanguageDropdown by remember { mutableStateOf(false) }
+    val currentLangCode by LanguageManager.currentLanguage.collectAsState()
+    val context = LocalContext.current
+    
+    val languageDisplayName = if (currentLangCode == "ru") "Русский" else "English"
+
     SettingsCard(
-        title = "Язык",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_98),
         icon = Icons.Default.Language
     ) {
-        OutlinedTextField(
-            value = "Русский",
-            onValueChange = {},
-            modifier = Modifier.fillMaxWidth(),
-            readOnly = true,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.background,
-                unfocusedContainerColor = MaterialTheme.colorScheme.background
+        Box(modifier = Modifier.fillMaxWidth()) {
+            OutlinedTextField(
+                value = languageDisplayName,
+                onValueChange = {},
+                modifier = Modifier.fillMaxWidth(),
+                readOnly = true,
+                trailingIcon = {
+                    IconButton(onClick = { showLanguageDropdown = true }) {
+                        Icon(Icons.Default.ArrowDropDown, contentDescription = null)
+                    }
+                },
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedContainerColor = MaterialTheme.colorScheme.background,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.background
+                )
             )
-        )
+            DropdownMenu(
+                expanded = showLanguageDropdown,
+                onDismissRequest = { showLanguageDropdown = false },
+                modifier = Modifier.fillMaxWidth(0.9f)
+            ) {
+                DropdownMenuItem(
+                    text = { Text("Русский") },
+                    onClick = {
+                        LanguageManager.setLanguage(context, "ru")
+                        showLanguageDropdown = false
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text("English") },
+                    onClick = {
+                        LanguageManager.setLanguage(context, "en")
+                        showLanguageDropdown = false
+                    }
+                )
+            }
+        }
     }
 
     SettingsCard(
-        title = "Режим сканирования по умолчанию",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_96),
         icon = Icons.Default.QrCodeScanner
     ) {
         Column {
-            listOf("Камера", "HID-сканер", "USB-COM").forEach { mode ->
+            listOf(androidx.compose.ui.res.stringResource(com.example.R.string.str_12), androidx.compose.ui.res.stringResource(com.example.R.string.str_11), "USB-COM").forEach { mode ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -158,7 +193,7 @@ fun SystemSettingsSection(onNavigateToHistory: () -> Unit, settingsViewModel: Se
     }
 
     SettingsCard(
-        title = "Общие",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_95),
         icon = Icons.Default.Settings
     ) {
         Column {
@@ -169,7 +204,7 @@ fun SystemSettingsSection(onNavigateToHistory: () -> Unit, settingsViewModel: Se
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Звук при сканировании", fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_94), fontWeight = FontWeight.Bold)
                 Switch(checked = true, onCheckedChange = {})
             }
             HorizontalDivider()
@@ -180,15 +215,15 @@ fun SystemSettingsSection(onNavigateToHistory: () -> Unit, settingsViewModel: Se
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Вибрация при сканировании", fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_93), fontWeight = FontWeight.Bold)
                 Switch(checked = true, onCheckedChange = {})
             }
         }
     }
 
     SettingsCard(
-        title = "USB-COM сканер",
-        description = "Настройки последовательного порта для USB-сканеров. Большинство использует 9600 8N1.",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_6),
+        description = androidx.compose.ui.res.stringResource(com.example.R.string.str_92),
         icon = Icons.Default.Usb
     ) {
         UsbComDiagnosticBlock()
@@ -198,15 +233,15 @@ fun SystemSettingsSection(onNavigateToHistory: () -> Unit, settingsViewModel: Se
 @Composable
 fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
     SettingsCard(
-        title = "Интеграция",
-        description = "Настройте интеграцию с внешним сервисом для экспорта данных.",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_91),
+        description = androidx.compose.ui.res.stringResource(com.example.R.string.str_90),
         icon = Icons.Default.Link
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
-                label = { Text("URL внешнего сервиса") },
+                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_89)) },
                 placeholder = { Text("https://api.example.com") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -217,7 +252,7 @@ fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
-                label = { Text("Bearer токен") },
+                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_88)) },
                 placeholder = { Text("Token") },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -230,15 +265,15 @@ fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
     }
 
     SettingsCard(
-        title = "Реквизиты",
-        description = "Настройка реквизитов организации и пользователя.",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_87),
+        description = androidx.compose.ui.res.stringResource(com.example.R.string.str_86),
         icon = Icons.Default.Business
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
-                label = { Text("ИНН Организации") },
+                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_85)) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.background,
@@ -248,7 +283,7 @@ fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
             OutlinedTextField(
                 value = "",
                 onValueChange = {},
-                label = { Text("ФИО сотрудника") },
+                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_84)) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedContainerColor = MaterialTheme.colorScheme.background,
@@ -259,8 +294,8 @@ fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
     }
 
     SettingsCard(
-        title = "Товары",
-        description = "Правила обработки номенклатуры и штрих-кодов.",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_83),
+        description = androidx.compose.ui.res.stringResource(com.example.R.string.str_82),
         icon = Icons.Default.Inventory,
         onClick = onNavigateToProducts
     ) {
@@ -272,7 +307,7 @@ fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Разрешить неизвестные штрих-коды", fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_81), fontWeight = FontWeight.Bold)
                 Switch(checked = false, onCheckedChange = {})
             }
             HorizontalDivider()
@@ -283,22 +318,22 @@ fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("Автоматически загружать справочник", fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_80), fontWeight = FontWeight.Bold)
                 Switch(checked = true, onCheckedChange = {})
             }
         }
     }
 
     SettingsCard(
-        title = "Импорт / Экспорт",
-        description = "Форматы и правила обмена файлами.",
+        title = androidx.compose.ui.res.stringResource(com.example.R.string.str_79),
+        description = androidx.compose.ui.res.stringResource(com.example.R.string.str_78),
         icon = Icons.Default.ImportExport
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             OutlinedTextField(
                 value = "Excel (.xlsx)",
                 onValueChange = {},
-                label = { Text("Формат экспорта по умолчанию") },
+                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_77)) },
                 modifier = Modifier.fillMaxWidth(),
                 readOnly = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -312,7 +347,12 @@ fun BusinessSettingsSection(onNavigateToProducts: () -> Unit) {
 
 @Composable
 fun UsbComDiagnosticBlock() {
-    var logs by remember { mutableStateOf(listOf("[ОЖИДАНИЕ] Готов к сканированию USB устройств...")) }
+    val logReady = androidx.compose.ui.res.stringResource(com.example.R.string.str_76)
+    val logSearch = androidx.compose.ui.res.stringResource(com.example.R.string.str_75)
+    val logTest = androidx.compose.ui.res.stringResource(com.example.R.string.str_73)
+    val logAuto = androidx.compose.ui.res.stringResource(com.example.R.string.str_71)
+    
+    var logs by remember { mutableStateOf(listOf(logReady)) }
 
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Row(
@@ -321,32 +361,32 @@ fun UsbComDiagnosticBlock() {
         ) {
             Button(
                 onClick = { 
-                    logs = listOf("[ПОИСК] Сканирование устройств...") + logs
+                    logs = listOf(logSearch) + logs
                 },
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)
             ) {
-                Text("Обновить", fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_74), fontWeight = FontWeight.Bold)
             }
             Button(
                 onClick = {
-                    logs = listOf("[ТЕСТ] Проверка подключения...") + logs
+                    logs = listOf(logTest) + logs
                 },
                 modifier = Modifier.weight(1f),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.onSecondary)
             ) {
-                Text("Проверить", fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_72), fontWeight = FontWeight.Bold)
             }
         }
         
         Button(
             onClick = {
-                logs = listOf("[АВТО] Запуск автоопределения...") + logs
+                logs = listOf(logAuto) + logs
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary, contentColor = MaterialTheme.colorScheme.onSecondary)
         ) {
-            Text("Автоопределение настроек", fontWeight = FontWeight.Bold)
+            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_70), fontWeight = FontWeight.Bold)
         }
 
         Box(

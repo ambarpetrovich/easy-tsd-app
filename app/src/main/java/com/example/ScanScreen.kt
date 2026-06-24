@@ -33,8 +33,9 @@ fun ScanScreen(
     initialSessionId: String? = null,
     onNavigateToProduct: (String, String) -> Unit = { _, _ -> }
 ) {
-    var selectedScanner by remember { mutableStateOf("Камера") }
-    val scanners = listOf("Камера", "HID-сканер", "USB-COM")
+    val defaultScanner = androidx.compose.ui.res.stringResource(com.example.R.string.str_12)
+    var selectedScanner by remember { mutableStateOf(defaultScanner) }
+    val scanners = listOf(androidx.compose.ui.res.stringResource(com.example.R.string.str_12), androidx.compose.ui.res.stringResource(com.example.R.string.str_11), "USB-COM")
     
     LaunchedEffect(initialSessionId) {
         if (initialSessionId != null) {
@@ -52,7 +53,7 @@ fun ScanScreen(
     val scannedCodes by scanViewModel.scannedCodes.collectAsState()
     
     var selectedTab by remember { mutableStateOf(0) }
-    val tabs = listOf("Общий список", "По товарам")
+    val tabs = listOf(androidx.compose.ui.res.stringResource(com.example.R.string.str_63), androidx.compose.ui.res.stringResource(com.example.R.string.str_62))
 
     var showAccountingDialog by remember { mutableStateOf(false) }
     var showCancelAccountingDialog by remember { mutableStateOf(false) }
@@ -65,7 +66,7 @@ fun ScanScreen(
         topBar = {
             TopAppBar(
                 title = { 
-                    Text("Сканирование", fontWeight = FontWeight.Black) 
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_61), fontWeight = FontWeight.Black) 
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.secondary,
@@ -105,12 +106,12 @@ fun ScanScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "Учтено: ${currentAccounting.displayName}",
+                            androidx.compose.ui.res.stringResource(com.example.R.string.str_60, androidx.compose.ui.res.stringResource(currentAccounting!!.displayNameRes)),
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
                         )
                         TextButton(onClick = { showCancelAccountingDialog = true }) {
-                            Text("Отменить")
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_59))
                         }
                     }
                 }
@@ -140,13 +141,13 @@ fun ScanScreen(
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondaryContainer, contentColor = MaterialTheme.colorScheme.onSecondaryContainer)
                 ) {
-                    Text("НОВАЯ", fontWeight = FontWeight.Black)
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_58), fontWeight = FontWeight.Black)
                 }
 
                 if (currentAccounting != null) {
                     SuggestionChip(
                         onClick = { },
-                        label = { Text("УЧТЕНО", fontWeight = FontWeight.Black) },
+                        label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_57), fontWeight = FontWeight.Black) },
                         modifier = Modifier.weight(1f).height(56.dp),
                         colors = SuggestionChipDefaults.suggestionChipColors(containerColor = MaterialTheme.colorScheme.tertiaryContainer)
                     )
@@ -157,7 +158,7 @@ fun ScanScreen(
                         shape = MaterialTheme.shapes.small,
                         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary)
                     ) {
-                        Text("УЧЕТ", fontWeight = FontWeight.Black)
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_56), fontWeight = FontWeight.Black)
                     }
                 }
                 
@@ -175,16 +176,16 @@ fun ScanScreen(
                     ) {
                         Icon(Icons.Default.Check, contentDescription = null)
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text("ЭКСПОРТ", fontWeight = FontWeight.Black, maxLines = 1)
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_55), fontWeight = FontWeight.Black, maxLines = 1)
                     }
                     
                     DropdownMenu(
                         expanded = showExportMenu,
                         onDismissRequest = { showExportMenu = false }
                     ) {
-                        DropdownMenuItem(text = { Text("В CSV") }, onClick = { showExportMenu = false })
-                        DropdownMenuItem(text = { Text("В XLSX") }, onClick = { showExportMenu = false })
-                        DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { showExportMenu = false })
+                        DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_54)) }, onClick = { showExportMenu = false })
+                        DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_53)) }, onClick = { showExportMenu = false })
+                        DropdownMenuItem(text = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_52)) }, onClick = { showExportMenu = false })
                     }
                 }
             }
@@ -197,7 +198,7 @@ fun ScanScreen(
         com.example.ui.components.AccountingVerificationDialog(
             codes = scannedCodes.map { it.normalizedCode },
             sessionId = currentSessionId!!,
-            sessionName = "Свободное сканирование",
+            sessionName = androidx.compose.ui.res.stringResource(com.example.R.string.str_36),
             accountingViewModel = accountingViewModel,
             onDismiss = { showAccountingDialog = false }
         )
@@ -254,9 +255,9 @@ fun ScanGroupedCodesList(codes: List<FreeScanCode>, onNavigateToProduct: (String
                                 if (product != null) {
                                     Text(product.product.name, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
                                 } else {
-                                    Text("Товар не найден", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_48), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                                 }
-                                Text("Кодов: ${gtinCodes.size}", style = MaterialTheme.typography.bodySmall)
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_51, gtinCodes.size), style = MaterialTheme.typography.bodySmall)
                             }
                             Icon(if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore, contentDescription = null)
                         }
@@ -268,7 +269,7 @@ fun ScanGroupedCodesList(codes: List<FreeScanCode>, onNavigateToProduct: (String
                                     modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
                                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                                 ) {
-                                    Text(if (product != null) "Открыть товар" else "Добавить товар")
+                                    Text(if (product != null) androidx.compose.ui.res.stringResource(com.example.R.string.str_49) else androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                                 }
                                 gtinCodes.forEach { code ->
                                     ScanHighlightedNormalizedCode(code)
@@ -301,14 +302,14 @@ fun ScanCodeItemCard(code: FreeScanCode, onNavigateToProduct: (String, String) -
                     if (gtin.isNotEmpty()) {
                         val product = productsViewModel.getProductByGtin(gtin).collectAsState(initial = null).value
                         if (product != null) {
-                            Text("Товар: ${product.product.name}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_50, product.product.name), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
                             Button(onClick = { onNavigateToProduct(gtin, "view") }, modifier = Modifier.padding(top = 8.dp)) {
-                                Text("Открыть товар")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_49))
                             }
                         } else {
-                            Text("Товар не найден", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_48), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
                             Button(onClick = { onNavigateToProduct(gtin, "create") }, modifier = Modifier.padding(top = 8.dp)) {
-                                Text("Добавить товар")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
                             }
                         }
                     }

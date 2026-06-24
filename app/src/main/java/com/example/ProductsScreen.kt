@@ -69,15 +69,15 @@ fun ProductsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Товары", fontWeight = FontWeight.Black) },
+                title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_83), fontWeight = FontWeight.Black) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 actions = {
                     IconButton(onClick = { /* TODO Import/Export */ }) {
-                        Icon(Icons.Default.ImportExport, contentDescription = "Импорт/Экспорт")
+                        Icon(Icons.Default.ImportExport, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_138))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -101,7 +101,7 @@ fun ProductsScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Добавить товар")
+                Icon(Icons.Default.Add, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_47))
             }
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -123,12 +123,12 @@ fun ProductsScreen(
                     value = searchQuery,
                     onValueChange = { viewModel.searchQuery.value = it },
                     modifier = Modifier.weight(1f),
-                    placeholder = { Text("Поиск...") },
+                    placeholder = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_137)) },
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                     trailingIcon = {
                         if (searchQuery.isNotEmpty()) {
                             IconButton(onClick = { viewModel.searchQuery.value = "" }) {
-                                Icon(Icons.Default.Clear, contentDescription = "Очистить")
+                                Icon(Icons.Default.Clear, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_136))
                             }
                         }
                     },
@@ -148,14 +148,14 @@ fun ProductsScreen(
                     FilterChip(
                         selected = selectedCategory == null,
                         onClick = { viewModel.selectedCategory.value = null },
-                        label = { Text("Все") },
+                        label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_135)) },
                         modifier = Modifier.padding(end = 8.dp)
                     )
                     categories.forEach { cat ->
                         FilterChip(
                             selected = selectedCategory == cat,
                             onClick = { viewModel.selectedCategory.value = cat },
-                            label = { Text(cat) },
+                            label = { Text(cat.ifEmpty { androidx.compose.ui.res.stringResource(com.example.R.string.str_115) }) },
                             modifier = Modifier.padding(end = 8.dp)
                         )
                     }
@@ -164,7 +164,7 @@ fun ProductsScreen(
 
             if (groupedProducts.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("Нет товаров", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_134), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
                 }
             } else {
                 LazyColumn(
@@ -175,7 +175,7 @@ fun ProductsScreen(
                     groupedProducts.forEach { (category, items) ->
                         stickyHeader {
                             Text(
-                                text = category,
+                                text = category.ifEmpty { androidx.compose.ui.res.stringResource(com.example.R.string.str_115) },
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
@@ -202,6 +202,7 @@ fun ProductsScreen(
     }
 
     showEditDialog?.let { currentItem ->
+        val saveErrorText = androidx.compose.ui.res.stringResource(com.example.R.string.str_133)
         ProductEditDialog(
             initialItem = currentItem,
             existingTypes = existingTypes,
@@ -213,7 +214,7 @@ fun ProductsScreen(
                         showEditDialog = null
                     }.onFailure { error ->
                         scope.launch {
-                            snackbarHostState.showSnackbar(error.message ?: "Ошибка сохранения")
+                            snackbarHostState.showSnackbar(error.message ?: saveErrorText)
                         }
                     }
                 }
@@ -241,7 +242,7 @@ fun ProductCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = item.product.name.ifEmpty { "Без названия" },
+                        text = item.product.name.ifEmpty { androidx.compose.ui.res.stringResource(com.example.R.string.str_132) },
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -264,10 +265,10 @@ fun ProductCard(
                 }
                 Row(horizontalArrangement = Arrangement.End) {
                     IconButton(onClick = onEdit, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Edit, contentDescription = "Редактировать", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+                        Icon(Icons.Default.Edit, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_131), tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
                     }
                     IconButton(onClick = onDelete, modifier = Modifier.size(32.dp)) {
-                        Icon(Icons.Default.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp))
+                        Icon(Icons.Default.Delete, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_130), tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp))
                     }
                 }
             }
@@ -325,7 +326,7 @@ fun ProductEditDialog(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = if (initialItem.product.id == 0) "Новый товар" else "Редактирование товара",
+                    text = if (initialItem.product.id == 0) androidx.compose.ui.res.stringResource(com.example.R.string.str_129) else androidx.compose.ui.res.stringResource(com.example.R.string.str_128),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 16.dp)
@@ -334,7 +335,7 @@ fun ProductEditDialog(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Наименование") },
+                    label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_127)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -350,13 +351,13 @@ fun ProductEditDialog(
                 OutlinedTextField(
                     value = category,
                     onValueChange = { category = it },
-                    label = { Text("Категория") },
+                    label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_126)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Штрих-коды", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_125), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 
                 // Barcode list editor
                 barcodes.forEachIndexed { index, bc ->
@@ -370,7 +371,7 @@ fun ProductEditDialog(
                             OutlinedTextField(
                                 value = bc.value,
                                 onValueChange = { newVal -> barcodes[index] = bc.copy(value = newVal) },
-                                label = { Text("Значение ШК") },
+                                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_124)) },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true
                             )
@@ -384,7 +385,7 @@ fun ProductEditDialog(
                                 OutlinedTextField(
                                     value = bc.type,
                                     onValueChange = { newVal -> barcodes[index] = bc.copy(type = newVal) },
-                                    label = { Text("Вид (Пр: Прочее, EAN-13)") },
+                                    label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_123)) },
                                     modifier = Modifier.fillMaxWidth().menuAnchor(),
                                     singleLine = true,
                                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
@@ -409,26 +410,27 @@ fun ProductEditDialog(
                             }
                         }
                         IconButton(onClick = { barcodes.removeAt(index) }) {
-                            Icon(Icons.Default.Clear, contentDescription = "Удалить ШК", tint = MaterialTheme.colorScheme.error)
+                            Icon(Icons.Default.Clear, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_122), tint = MaterialTheme.colorScheme.error)
                         }
                     }
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
                 }
 
+                val defaultType = androidx.compose.ui.res.stringResource(com.example.R.string.str_113)
                 Button(
                     onClick = {
-                        barcodes.add(BarcodeEntity(productId = 0, value = "", type = "Прочее"))
+                        barcodes.add(BarcodeEntity(productId = 0, value = "", type = defaultType))
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Добавить ШК")
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_121))
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-                Text("Атрибуты", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_120), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 
                 attributes.forEachIndexed { index, attr ->
                     Row(
@@ -446,7 +448,7 @@ fun ProductEditDialog(
                                 OutlinedTextField(
                                     value = attr.name,
                                     onValueChange = { newVal -> attributes[index] = attr.copy(name = newVal) },
-                                    label = { Text("Название (Цвет, Размер)") },
+                                    label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_119)) },
                                     modifier = Modifier.fillMaxWidth().menuAnchor(),
                                     singleLine = true,
                                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedName) },
@@ -473,13 +475,13 @@ fun ProductEditDialog(
                             OutlinedTextField(
                                 value = attr.value,
                                 onValueChange = { newVal -> attributes[index] = attr.copy(value = newVal) },
-                                label = { Text("Значение") },
+                                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_118)) },
                                 modifier = Modifier.fillMaxWidth(),
                                 singleLine = true
                             )
                         }
                         IconButton(onClick = { attributes.removeAt(index) }) {
-                            Icon(Icons.Default.Clear, contentDescription = "Удалить атрибут", tint = MaterialTheme.colorScheme.error)
+                            Icon(Icons.Default.Clear, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_117), tint = MaterialTheme.colorScheme.error)
                         }
                     }
                     HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
@@ -494,7 +496,7 @@ fun ProductEditDialog(
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Добавить атрибут")
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_116))
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
@@ -504,7 +506,7 @@ fun ProductEditDialog(
                     horizontalArrangement = Arrangement.End
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Отмена")
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_13))
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
@@ -512,7 +514,7 @@ fun ProductEditDialog(
                             val updatedProduct = initialItem.product.copy(
                                 name = name,
                                 gtin = gtin,
-                                category = category.ifEmpty { "Без категории" }
+                                category = category
                             )
                             onSave(updatedProduct, barcodes.toList(), attributes.toList())
                         },
@@ -520,7 +522,7 @@ fun ProductEditDialog(
                                   barcodes.all { it.value.isNotBlank() && it.type.isNotBlank() } &&
                                   attributes.all { it.name.isNotBlank() && it.value.isNotBlank() }
                     ) {
-                        Text("Сохранить")
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_114))
                     }
                 }
             }

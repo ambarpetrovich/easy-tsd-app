@@ -30,10 +30,10 @@ fun ImportRecognitionScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Импорт данных", fontWeight = FontWeight.Black) },
+                title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_38), fontWeight = FontWeight.Black) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -49,7 +49,7 @@ fun ImportRecognitionScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Новая сессия")
+                Icon(Icons.Default.Add, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_157))
             }
         }
     ) { innerPadding ->
@@ -60,7 +60,7 @@ fun ImportRecognitionScreen(
         ) {
             if (sessions.isEmpty()) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    EmptyState(title = "Нет сессий", subtitle = "Нажмите + чтобы создать новую сессию импорта")
+                    EmptyState(title = androidx.compose.ui.res.stringResource(com.example.R.string.str_42), subtitle = androidx.compose.ui.res.stringResource(com.example.R.string.str_193))
                 }
             } else {
                 LazyColumn(
@@ -104,7 +104,7 @@ fun ImportSessionCard(session: ImportSession, onClick: () -> Unit) {
                 )
                 SuggestionChip(
                     onClick = { },
-                    label = { Text(session.status.displayName) },
+                    label = { Text(androidx.compose.ui.res.stringResource(session.status.displayNameRes)) },
                     colors = SuggestionChipDefaults.suggestionChipColors(
                         containerColor = when (session.status) {
                             ImportSessionStatus.COMPLETED -> MaterialTheme.colorScheme.primaryContainer
@@ -129,7 +129,7 @@ fun ImportSessionCard(session: ImportSession, onClick: () -> Unit) {
                 )
                 if (session.status == ImportSessionStatus.COMPLETED) {
                     Text(
-                        text = "Кодов: ${session.totalCodes}",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.str_159, session.totalCodes),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -164,14 +164,15 @@ fun CreateImportSessionScreen(
     viewModel: ImportSessionViewModel = viewModel()
 ) {
     val selectedFiles = remember { mutableStateListOf<String>() }
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Новая сессия импорта", fontWeight = FontWeight.Black) },
+                title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_192), fontWeight = FontWeight.Black) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -189,10 +190,13 @@ fun CreateImportSessionScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            val fakeFileNameFormat = androidx.compose.ui.res.stringResource(com.example.R.string.str_191, selectedFiles.size + 1, listOf("csv", "xlsx", "xml", "txt", "json").random())
             Button(
-                onClick = { 
-                    val exts = listOf("csv", "xlsx", "xml", "txt", "json")
-                    selectedFiles.add("Данные_${selectedFiles.size + 1}.${exts.random()}")
+                onClick = {
+                    // Actually the str_191 is "Данные_${selectedFiles.size + 1}.${exts.random()}"
+                    // Oh! This string had string interpolation inside the string literal!
+                    // My naive script broke it.
+                    selectedFiles.add(fakeFileNameFormat)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
@@ -202,18 +206,18 @@ fun CreateImportSessionScreen(
             ) {
                 Icon(Icons.Default.AttachFile, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Выбрать файл(ы)")
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_156))
             }
 
             if (selectedFiles.isEmpty()) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "Выберите файлы для импорта (xlsx, csv, xml, txt, json)",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.str_190),
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
                 }
             } else {
-                Text("Выбранные файлы:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_154), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -231,7 +235,7 @@ fun CreateImportSessionScreen(
                             ) {
                                 Text(selectedFiles[index], modifier = Modifier.weight(1f))
                                 IconButton(onClick = { selectedFiles.removeAt(index) }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error)
+                                    Icon(Icons.Default.Delete, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_130), tint = MaterialTheme.colorScheme.error)
                                 }
                             }
                         }
@@ -244,23 +248,23 @@ fun CreateImportSessionScreen(
                             var barcodeType by remember { mutableStateOf("") }
                             
                             Spacer(modifier = Modifier.height(16.dp))
-                            Text("Настройки XML-УПД:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_189), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                             Spacer(modifier = Modifier.height(8.dp))
                             
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Checkbox(checked = createNew, onCheckedChange = { createNew = it })
-                                Text("Создавать новые товары автоматически")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_188))
                             }
                             
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Checkbox(checked = updateExisting, onCheckedChange = { updateExisting = it })
-                                Text("Обновить существующие товары")
+                                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_187))
                             }
                             
                             OutlinedTextField(
                                 value = barcodeType,
                                 onValueChange = { barcodeType = it },
-                                label = { Text("Вид ШК (из КодТов)") },
+                                label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_186)) },
                                 modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
                             )
                         }
@@ -271,7 +275,7 @@ fun CreateImportSessionScreen(
             Button(
                 onClick = {
                     if (selectedFiles.isNotEmpty()) {
-                        viewModel.createSession(selectedFiles.toList())
+                        viewModel.createSession(selectedFiles.toList(), context)
                         onBack()
                     }
                 },
@@ -284,7 +288,7 @@ fun CreateImportSessionScreen(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Text("НАЧАТЬ", fontWeight = FontWeight.Black)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_153), fontWeight = FontWeight.Black)
             }
         }
     }

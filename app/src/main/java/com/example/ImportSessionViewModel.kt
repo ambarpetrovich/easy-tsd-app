@@ -13,11 +13,11 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
-enum class ImportSessionStatus(val displayName: String) {
-    PENDING("Ожидает"),
-    IN_PROGRESS("В процессе"),
-    COMPLETED("Завершено"),
-    FAILED("Ошибка")
+enum class ImportSessionStatus(@androidx.annotation.StringRes val displayNameRes: Int) {
+    PENDING(R.string.status_pending),
+    IN_PROGRESS(R.string.status_in_progress),
+    COMPLETED(R.string.status_completed),
+    FAILED(R.string.status_failed)
 }
 
 data class ImportFile(
@@ -119,10 +119,10 @@ class ImportSessionViewModel : ViewModel() {
         }
     }
 
-    fun createSession(filenames: List<String>) {
+    fun createSession(filenames: List<String>, context: android.content.Context) {
         val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         val dateStr = format.format(Date())
-        val title = if (filenames.size == 1) filenames.first() else "Импорт ${filenames.size} файлов"
+        val title = if (filenames.size == 1) filenames.first() else context.getString(R.string.import_n_files, filenames.size)
         
         val files = filenames.map { name ->
             val ext = name.substringAfterLast('.', "")

@@ -1,0 +1,327 @@
+app/src/main/java/com/example/ui/components/CommonUI.kt:172:                    text = "$codesCount кодов",
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:36:    val scanners = listOf("Камера", "HID-сканер", "USB-COM")
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:59:            "Камера" -> {
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:73:            "HID-сканер" -> {
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:103:                text = "HID-сканер (Клавиатура)",
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:109:                text = "Наведите сканер на штрих-код",
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:139:                placeholder = { Text("Ожидание ввода...") },
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:143:            Button(onClick = onSimulateScan) { Text("Эмулировать") }
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:152:    var status by remember { mutableStateOf("Инициализация...") }
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:186:                text = "USB-COM сканер",
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:192:                text = "Статус: $status",
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:194:                color = if (status == "Подключено") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:197:            Button(onClick = { usbComScanner.autoConnect() }) { Text("Переподключить") }
+app/src/main/java/com/example/ui/components/ScannerSelectionBlock.kt:199:            Button(onClick = onSimulateScan) { Text("Эмулировать") }
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:34:        title = { Text("Принять к учету") },
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:38:                    Text("Выберите тип операции учета:")
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:42:                            Text("Приёмка")
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:45:                            Text("Отгрузка")
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:50:                        Text("Выбрано: ${selectedType!!.displayName}", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:55:                    Text("Предупреждение!", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:57:                    Text("У ${warnings.size} кодов тип последней операции совпадает с текущим (${selectedType!!.displayName}).")
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:67:                                    Text("Код: $code", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:69:                                    Text("История операций:", style = MaterialTheme.typography.labelSmall)
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:72:                                        Text("- ${op.type.displayName} ($dateStr) в [${op.sessionName}]", style = MaterialTheme.typography.labelSmall)
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:79:                    Text("Все равно принять к учету?", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp))
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:100:                    Text(if (showWarnings) "Подтвердить" else "Проверить и Принять")
+app/src/main/java/com/example/ui/components/AccountingVerificationDialog.kt:106:                Text("Отмена")
+app/src/main/java/com/example/ui/components/CameraScanner.kt:44:        Text("Разрешение на использование камеры не предоставлено.")
+app/src/main/java/com/example/ui/components/CancelAccountingDialog.kt:24:        title = { Text("Отмена учета") },
+app/src/main/java/com/example/ui/components/CancelAccountingDialog.kt:27:                Text("Вы уверены, что хотите отменить принятие сессии к учету? Для подтверждения решите пример:")
+app/src/main/java/com/example/ui/components/CancelAccountingDialog.kt:35:                    label = { Text("Ответ") },
+app/src/main/java/com/example/ui/components/CancelAccountingDialog.kt:41:                    Text("Неверный ответ", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+app/src/main/java/com/example/ui/components/CancelAccountingDialog.kt:56:                Text("Подтвердить")
+app/src/main/java/com/example/ui/components/CancelAccountingDialog.kt:61:                Text("Отмена")
+app/src/main/java/com/example/AppNavigation.kt:31:    object Home : Screen("home", "Начало", Icons.Filled.Home)
+app/src/main/java/com/example/AppNavigation.kt:32:    object Scan : Screen("scan?sessionId={sessionId}", "Скан", Icons.Filled.QrCodeScanner) {
+app/src/main/java/com/example/AppNavigation.kt:37:    object Files : Screen("files", "Файлы", Icons.Filled.Folder)
+app/src/main/java/com/example/AppNavigation.kt:38:    object Settings : Screen("settings", "Настройки", Icons.Filled.Settings)
+app/src/main/java/com/example/AppNavigation.kt:39:    object History : Screen("history", "История версий", Icons.Filled.Settings)
+app/src/main/java/com/example/AppNavigation.kt:40:    object Products : Screen("products?action={action}&gtin={gtin}", "Товары", Icons.Filled.Settings) {
+app/src/main/java/com/example/AppNavigation.kt:46:    object PdfSessions : Screen("pdf_sessions", "Распознавание PDF", Icons.Filled.PictureAsPdf)
+app/src/main/java/com/example/AppNavigation.kt:47:    object CreatePdfSession : Screen("create_pdf_session", "Новая сессия", Icons.Filled.PictureAsPdf)
+app/src/main/java/com/example/AppNavigation.kt:48:    object PdfSessionDetails : Screen("pdf_session_details/{sessionId}", "Детали сессии", Icons.Filled.PictureAsPdf) {
+app/src/main/java/com/example/AppNavigation.kt:51:    object ImportSessions : Screen("import_sessions", "Импорт данных", Icons.Filled.Description)
+app/src/main/java/com/example/AppNavigation.kt:52:    object CreateImportSession : Screen("create_import_session", "Новая сессия импорта", Icons.Filled.Description)
+app/src/main/java/com/example/AppNavigation.kt:53:    object ImportSessionDetails : Screen("import_session_details/{sessionId}", "Детали импорта", Icons.Filled.Description) {
+app/src/main/java/com/example/HomeScreen.kt:80:                        Text("Умная приемка и отгрузка", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
+app/src/main/java/com/example/HomeScreen.kt:81:                        Text("Проверка и учет КИЗов. Сверка и инвентаризация по любым файлам (PDF, XML, Excel).", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
+app/src/main/java/com/example/HomeScreen.kt:87:                title = "Свободное сканирование",
+app/src/main/java/com/example/HomeScreen.kt:88:                description = "Сканируйте штрих-коды без привязки к документу.",
+app/src/main/java/com/example/HomeScreen.kt:93:            SectionHeader(title = "Предыдущие сессии")
+app/src/main/java/com/example/HomeScreen.kt:100:                    title = "Нет сессий",
+app/src/main/java/com/example/HomeScreen.kt:101:                    subtitle = "Создайте новую сессию из файлов или начните свободное сканирование"
+app/src/main/java/com/example/HomeScreen.kt:111:                            type = if (session.type == PdfSessionType.RECOGNITION) "Распознавание PDF" else "Инвентаризация PDF", 
+app/src/main/java/com/example/HomeScreen.kt:124:                            type = if (session.type == ImportSessionType.RECOGNITION) "Импорт данных" else "Инвентаризация (Импорт)", 
+app/src/main/java/com/example/HomeScreen.kt:137:                            type = "Свободное сканирование", 
+app/src/main/java/com/example/HomeScreen.kt:149:                title = { Text("Как это работает?", fontWeight = FontWeight.Bold) },
+app/src/main/java/com/example/HomeScreen.kt:152:                        Text("1. Загрузите файлы с кодами маркировки (PDF, Excel, XML, CSV).")
+app/src/main/java/com/example/HomeScreen.kt:153:                        Text("2. Сверьте данные сканированием с помощью камеры или сканера штрихкодов.")
+app/src/main/java/com/example/HomeScreen.kt:154:                        Text("3. Примите отсканированное к учету (Приёмка/Отгрузка) для будущих проверок и контроля остатков.")
+app/src/main/java/com/example/HomeScreen.kt:159:                        Text("Понятно")
+app/src/main/java/com/example/ScanScreen.kt:36:    var selectedScanner by remember { mutableStateOf("Камера") }
+app/src/main/java/com/example/ScanScreen.kt:37:    val scanners = listOf("Камера", "HID-сканер", "USB-COM")
+app/src/main/java/com/example/ScanScreen.kt:55:    val tabs = listOf("Общий список", "По товарам")
+app/src/main/java/com/example/ScanScreen.kt:68:                    Text("Сканирование", fontWeight = FontWeight.Black) 
+app/src/main/java/com/example/ScanScreen.kt:108:                            "Учтено: ${currentAccounting.displayName}",
+app/src/main/java/com/example/ScanScreen.kt:113:                            Text("Отменить")
+app/src/main/java/com/example/ScanScreen.kt:143:                    Text("НОВАЯ", fontWeight = FontWeight.Black)
+app/src/main/java/com/example/ScanScreen.kt:149:                        label = { Text("УЧТЕНО", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/ScanScreen.kt:160:                        Text("УЧЕТ", fontWeight = FontWeight.Black)
+app/src/main/java/com/example/ScanScreen.kt:178:                        Text("ЭКСПОРТ", fontWeight = FontWeight.Black, maxLines = 1)
+app/src/main/java/com/example/ScanScreen.kt:185:                        DropdownMenuItem(text = { Text("В CSV") }, onClick = { showExportMenu = false })
+app/src/main/java/com/example/ScanScreen.kt:186:                        DropdownMenuItem(text = { Text("В XLSX") }, onClick = { showExportMenu = false })
+app/src/main/java/com/example/ScanScreen.kt:187:                        DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { showExportMenu = false })
+app/src/main/java/com/example/ScanScreen.kt:200:            sessionName = "Свободное сканирование",
+app/src/main/java/com/example/ScanScreen.kt:257:                                    Text("Товар не найден", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+app/src/main/java/com/example/ScanScreen.kt:259:                                Text("Кодов: ${gtinCodes.size}", style = MaterialTheme.typography.bodySmall)
+app/src/main/java/com/example/ScanScreen.kt:271:                                    Text(if (product != null) "Открыть товар" else "Добавить товар")
+app/src/main/java/com/example/ScanScreen.kt:304:                            Text("Товар: ${product.product.name}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+app/src/main/java/com/example/ScanScreen.kt:306:                                Text("Открыть товар")
+app/src/main/java/com/example/ScanScreen.kt:309:                            Text("Товар не найден", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+app/src/main/java/com/example/ScanScreen.kt:311:                                Text("Добавить товар")
+app/src/main/java/com/example/HistoryScreen.kt:24:                    Text("История версий", fontWeight = FontWeight.Black) 
+app/src/main/java/com/example/HistoryScreen.kt:28:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/HistoryScreen.kt:46:                Pair("0.6.9", "2026-06-19 - Единый промышленный UI"),
+app/src/main/java/com/example/HistoryScreen.kt:47:                Pair("0.6.1", "2026-06-19 - Настройки USB-COM"),
+app/src/main/java/com/example/HistoryScreen.kt:48:                Pair("0.6.0", "2026-06-18 - USB-COM: полная переработка плагина на Kotlin")
+app/src/main/java/com/example/HistoryScreen.kt:86:                                    text = "Версия ${version.first}",
+app/src/main/java/com/example/SettingsScreen.kt:41:    val tabs = listOf("Системные", "Прикладные")
+app/src/main/java/com/example/SettingsScreen.kt:47:                    Text("Настройки", fontWeight = FontWeight.Black) 
+app/src/main/java/com/example/SettingsScreen.kt:108:        title = "О приложении",
+app/src/main/java/com/example/SettingsScreen.kt:113:            text = "История версий",
+app/src/main/java/com/example/SettingsScreen.kt:121:        title = "Язык",
+app/src/main/java/com/example/SettingsScreen.kt:125:            value = "Русский",
+app/src/main/java/com/example/SettingsScreen.kt:137:        title = "Режим сканирования по умолчанию",
+app/src/main/java/com/example/SettingsScreen.kt:141:            listOf("Камера", "HID-сканер", "USB-COM").forEach { mode ->
+app/src/main/java/com/example/SettingsScreen.kt:161:        title = "Общие",
+app/src/main/java/com/example/SettingsScreen.kt:172:                Text("Звук при сканировании", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/SettingsScreen.kt:183:                Text("Вибрация при сканировании", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/SettingsScreen.kt:190:        title = "USB-COM сканер",
+app/src/main/java/com/example/SettingsScreen.kt:191:        description = "Настройки последовательного порта для USB-сканеров. Большинство использует 9600 8N1.",
+app/src/main/java/com/example/SettingsScreen.kt:201:        title = "Интеграция",
+app/src/main/java/com/example/SettingsScreen.kt:202:        description = "Настройте интеграцию с внешним сервисом для экспорта данных.",
+app/src/main/java/com/example/SettingsScreen.kt:209:                label = { Text("URL внешнего сервиса") },
+app/src/main/java/com/example/SettingsScreen.kt:220:                label = { Text("Bearer токен") },
+app/src/main/java/com/example/SettingsScreen.kt:233:        title = "Реквизиты",
+app/src/main/java/com/example/SettingsScreen.kt:234:        description = "Настройка реквизитов организации и пользователя.",
+app/src/main/java/com/example/SettingsScreen.kt:241:                label = { Text("ИНН Организации") },
+app/src/main/java/com/example/SettingsScreen.kt:251:                label = { Text("ФИО сотрудника") },
+app/src/main/java/com/example/SettingsScreen.kt:262:        title = "Товары",
+app/src/main/java/com/example/SettingsScreen.kt:263:        description = "Правила обработки номенклатуры и штрих-кодов.",
+app/src/main/java/com/example/SettingsScreen.kt:275:                Text("Разрешить неизвестные штрих-коды", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/SettingsScreen.kt:286:                Text("Автоматически загружать справочник", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/SettingsScreen.kt:293:        title = "Импорт / Экспорт",
+app/src/main/java/com/example/SettingsScreen.kt:294:        description = "Форматы и правила обмена файлами.",
+app/src/main/java/com/example/SettingsScreen.kt:301:                label = { Text("Формат экспорта по умолчанию") },
+app/src/main/java/com/example/SettingsScreen.kt:315:    var logs by remember { mutableStateOf(listOf("[ОЖИДАНИЕ] Готов к сканированию USB устройств...")) }
+app/src/main/java/com/example/SettingsScreen.kt:324:                    logs = listOf("[ПОИСК] Сканирование устройств...") + logs
+app/src/main/java/com/example/SettingsScreen.kt:329:                Text("Обновить", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/SettingsScreen.kt:333:                    logs = listOf("[ТЕСТ] Проверка подключения...") + logs
+app/src/main/java/com/example/SettingsScreen.kt:338:                Text("Проверить", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/SettingsScreen.kt:344:                logs = listOf("[АВТО] Запуск автоопределения...") + logs
+app/src/main/java/com/example/SettingsScreen.kt:349:            Text("Автоопределение настроек", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/FilesScreen.kt:28:                    Text("Файлы", fontWeight = FontWeight.Black) 
+app/src/main/java/com/example/FilesScreen.kt:47:                title = "Распознавание DataMatrix в PDF",
+app/src/main/java/com/example/FilesScreen.kt:48:                description = "Извлечение полных кодов маркировки и GTIN из PDF-файлов",
+app/src/main/java/com/example/FilesScreen.kt:54:                title = "Импорт XLSX, XML, CSV, JSON, TXT",
+app/src/main/java/com/example/FilesScreen.kt:55:                description = "Извлечение кодов, GTIN и наименований товаров",
+app/src/main/java/com/example/FilesScreen.kt:60:            SectionHeader(title = "Загруженные файлы")
+app/src/main/java/com/example/FilesScreen.kt:63:                title = "Нет файлов",
+app/src/main/java/com/example/FilesScreen.kt:64:                subtitle = "Загрузите файл для обработки"
+app/src/main/java/com/example/data/AppDatabase.kt:12:    val category: String = "Без категории"
+app/src/main/java/com/example/ProductsViewModel.kt:45:        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf("Прочее"))
+app/src/main/java/com/example/ProductsViewModel.kt:78:                        throw Exception("ШК ${barcode.value} уже существует в другом товаре.")
+app/src/main/java/com/example/ProductsViewModel.kt:82:                        throw Exception("Не может быть более 1 ШК вида '${barcode.type}'.")
+app/src/main/java/com/example/ProductsScreen.kt:72:                title = { Text("Товары", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/ProductsScreen.kt:75:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/ProductsScreen.kt:80:                        Icon(Icons.Default.ImportExport, contentDescription = "Импорт/Экспорт")
+app/src/main/java/com/example/ProductsScreen.kt:104:                Icon(Icons.Default.Add, contentDescription = "Добавить товар")
+app/src/main/java/com/example/ProductsScreen.kt:126:                    placeholder = { Text("Поиск...") },
+app/src/main/java/com/example/ProductsScreen.kt:131:                                Icon(Icons.Default.Clear, contentDescription = "Очистить")
+app/src/main/java/com/example/ProductsScreen.kt:151:                        label = { Text("Все") },
+app/src/main/java/com/example/ProductsScreen.kt:167:                    Text("Нет товаров", color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f))
+app/src/main/java/com/example/ProductsScreen.kt:216:                            snackbarHostState.showSnackbar(error.message ?: "Ошибка сохранения")
+app/src/main/java/com/example/ProductsScreen.kt:244:                        text = item.product.name.ifEmpty { "Без названия" },
+app/src/main/java/com/example/ProductsScreen.kt:267:                        Icon(Icons.Default.Edit, contentDescription = "Редактировать", tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(20.dp))
+app/src/main/java/com/example/ProductsScreen.kt:270:                        Icon(Icons.Default.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error, modifier = Modifier.size(20.dp))
+app/src/main/java/com/example/ProductsScreen.kt:328:                    text = if (initialItem.product.id == 0) "Новый товар" else "Редактирование товара",
+app/src/main/java/com/example/ProductsScreen.kt:337:                    label = { Text("Наименование") },
+app/src/main/java/com/example/ProductsScreen.kt:353:                    label = { Text("Категория") },
+app/src/main/java/com/example/ProductsScreen.kt:359:                Text("Штрих-коды", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ProductsScreen.kt:373:                                label = { Text("Значение ШК") },
+app/src/main/java/com/example/ProductsScreen.kt:387:                                    label = { Text("Вид (Пр: Прочее, EAN-13)") },
+app/src/main/java/com/example/ProductsScreen.kt:412:                            Icon(Icons.Default.Clear, contentDescription = "Удалить ШК", tint = MaterialTheme.colorScheme.error)
+app/src/main/java/com/example/ProductsScreen.kt:420:                        barcodes.add(BarcodeEntity(productId = 0, value = "", type = "Прочее"))
+app/src/main/java/com/example/ProductsScreen.kt:427:                    Text("Добавить ШК")
+app/src/main/java/com/example/ProductsScreen.kt:431:                Text("Атрибуты", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ProductsScreen.kt:449:                                    label = { Text("Название (Цвет, Размер)") },
+app/src/main/java/com/example/ProductsScreen.kt:476:                                label = { Text("Значение") },
+app/src/main/java/com/example/ProductsScreen.kt:482:                            Icon(Icons.Default.Clear, contentDescription = "Удалить атрибут", tint = MaterialTheme.colorScheme.error)
+app/src/main/java/com/example/ProductsScreen.kt:497:                    Text("Добавить атрибут")
+app/src/main/java/com/example/ProductsScreen.kt:507:                        Text("Отмена")
+app/src/main/java/com/example/ProductsScreen.kt:515:                                category = category.ifEmpty { "Без категории" }
+app/src/main/java/com/example/ProductsScreen.kt:523:                        Text("Сохранить")
+app/src/main/java/com/example/PdfSessionViewModel.kt:17:    PENDING("Ожидает"),
+app/src/main/java/com/example/PdfSessionViewModel.kt:18:    IN_PROGRESS("В процессе"),
+app/src/main/java/com/example/PdfSessionViewModel.kt:19:    COMPLETED("Завершено"),
+app/src/main/java/com/example/PdfSessionViewModel.kt:20:    FAILED("Ошибка")
+app/src/main/java/com/example/PdfSessionViewModel.kt:76:            PdfSession("1", "Сессия из 7 файлов", "24.06.2026 10:15", PdfSessionStatus.COMPLETED, PdfSessionType.RECOGNITION, 1f, 150, 
+app/src/main/java/com/example/PdfSessionViewModel.kt:78:                    PdfFile("Накладная_1.pdf", 5, 20),
+app/src/main/java/com/example/PdfSessionViewModel.kt:79:                    PdfFile("Счет_12.pdf", 2, 10),
+app/src/main/java/com/example/PdfSessionViewModel.kt:80:                    PdfFile("Документ_A.pdf", 10, 40),
+app/src/main/java/com/example/PdfSessionViewModel.kt:81:                    PdfFile("Документ_B.pdf", 3, 15),
+app/src/main/java/com/example/PdfSessionViewModel.kt:82:                    PdfFile("Акт_1.pdf", 1, 5),
+app/src/main/java/com/example/PdfSessionViewModel.kt:83:                    PdfFile("Акт_2.pdf", 1, 10),
+app/src/main/java/com/example/PdfSessionViewModel.kt:84:                    PdfFile("ТТН_99.pdf", 12, 50)
+app/src/main/java/com/example/PdfSessionViewModel.kt:88:            PdfSession("2", "Счет-фактура_12.pdf", "24.06.2026 11:30", PdfSessionStatus.IN_PROGRESS, PdfSessionType.RECOGNITION, 0.45f, 0,
+app/src/main/java/com/example/PdfSessionViewModel.kt:89:                files = listOf(PdfFile("Счет-фактура_12.pdf", 2, 0))
+app/src/main/java/com/example/PdfSessionViewModel.kt:112:        val title = if (filenames.size == 1) filenames.first() else "Сессия из ${filenames.size} файлов"
+app/src/main/java/com/example/PdfRecognitionScreen.kt:61:                title = { Text("Распознавание PDF", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/PdfRecognitionScreen.kt:64:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/PdfRecognitionScreen.kt:80:                Icon(Icons.Default.Add, contentDescription = "Новая сессия")
+app/src/main/java/com/example/PdfRecognitionScreen.kt:91:                    EmptyState(title = "Нет сессий", subtitle = "Нажмите + чтобы создать новую сессию распознавания")
+app/src/main/java/com/example/PdfRecognitionScreen.kt:160:                        text = "Кодов: ${session.totalCodes}",
+app/src/main/java/com/example/PdfRecognitionScreen.kt:203:                val fileName = getFileName(context, uri) ?: "Неизвестный_документ.pdf"
+app/src/main/java/com/example/PdfRecognitionScreen.kt:212:                title = { Text("Новая сессия", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/PdfRecognitionScreen.kt:215:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/PdfRecognitionScreen.kt:245:                Text("Выбрать файл(ы)")
+app/src/main/java/com/example/PdfRecognitionScreen.kt:251:                        text = "Выберите PDF файлы для распознавания",
+app/src/main/java/com/example/PdfRecognitionScreen.kt:256:                Text("Выбранные файлы:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/PdfRecognitionScreen.kt:277:                                    Icon(Icons.Default.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error)
+app/src/main/java/com/example/PdfRecognitionScreen.kt:301:                Text("НАЧАТЬ", fontWeight = FontWeight.Black)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:54:                title = { Text(session?.title ?: "Детали сессии", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:57:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:65:                                Icon(Icons.Default.FileDownload, contentDescription = "Экспорт")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:71:                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { 
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:77:                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { 
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:83:                                DropdownMenuItem(text = { Text("В JSON") }, onClick = { 
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:89:                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { 
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:127:                            Text("Статус: ${session!!.status.displayName}")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:129:                                Text("Распознано: ${session!!.totalCodes} кодов", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:151:                                            Text("${session!!.files.size} файлов", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:156:                                            Text("Файлы сессии:", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:173:                                                    Text("${file.pages} стр., ${file.codesCount} кодов", style = MaterialTheme.typography.bodySmall)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:199:                                Text("Исходные данные", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:221:                            Text("Сверка")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:236:                                Text("Учет")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:243:                            text = "Режим: Сверка",
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:259:                                Text("Учет")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:270:                        Text("Распознавание... ${(session!!.progress * 100).toInt()}%")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:312:                                    "Учтено: ${currentAccounting.displayName}",
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:317:                                    Text("Отменить")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:327:                            text = { Text("Плоский список") }
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:332:                            text = { Text("По GTIN") }
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:338:                                text = { Text("Отсканированные") }
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:426:                                    Text("Товар: ${product!!.product.name}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:428:                                        Text("Открыть товар")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:431:                                    Text("Товар не найден", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:433:                                        Text("Добавить товар")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:520:                                    Text("Товар не найден", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:522:                                Text("Кодов: ${gtinCodes.size}" + if (scannedCodes.isNotEmpty()) " (Отсканировано: $scannedGtinCount)" else "", style = MaterialTheme.typography.bodySmall)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:537:                                    Text(if (product != null) "Открыть товар" else "Добавить товар")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:596:                        Text(if (product != null) "Открыть товар" else "Добавить товар")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:661:                    text = "НЕТ В УПД",
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:671:            Text("Отсканирован: ${scans.size} раз", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary)
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:686:            title = { Text("Информация о файле") },
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:689:                    Text("Файл: ${truncateMiddle(fileName, 30)}")
+app/src/main/java/com/example/PdfSessionDetailsScreen.kt:691:                    Text("Страница: ${code.pageNumber}")
+app/src/main/java/com/example/ImportSessionViewModel.kt:17:    PENDING("Ожидает"),
+app/src/main/java/com/example/ImportSessionViewModel.kt:18:    IN_PROGRESS("В процессе"),
+app/src/main/java/com/example/ImportSessionViewModel.kt:19:    COMPLETED("Завершено"),
+app/src/main/java/com/example/ImportSessionViewModel.kt:20:    FAILED("Ошибка")
+app/src/main/java/com/example/ImportSessionViewModel.kt:76:            ImportSession("1", "Импорт из 3 файлов", "24.06.2026 12:00", ImportSessionStatus.COMPLETED, ImportSessionType.RECOGNITION, 1f, 80, 
+app/src/main/java/com/example/ImportSessionViewModel.kt:125:        val title = if (filenames.size == 1) filenames.first() else "Импорт ${filenames.size} файлов"
+app/src/main/java/com/example/ImportRecognitionScreen.kt:33:                title = { Text("Импорт данных", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/ImportRecognitionScreen.kt:36:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:52:                Icon(Icons.Default.Add, contentDescription = "Новая сессия")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:63:                    EmptyState(title = "Нет сессий", subtitle = "Нажмите + чтобы создать новую сессию импорта")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:132:                        text = "Кодов: ${session.totalCodes}",
+app/src/main/java/com/example/ImportRecognitionScreen.kt:171:                title = { Text("Новая сессия импорта", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/ImportRecognitionScreen.kt:174:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:195:                    selectedFiles.add("Данные_${selectedFiles.size + 1}.${exts.random()}")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:205:                Text("Выбрать файл(ы)")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:211:                        text = "Выберите файлы для импорта (xlsx, csv, xml, txt, json)",
+app/src/main/java/com/example/ImportRecognitionScreen.kt:216:                Text("Выбранные файлы:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ImportRecognitionScreen.kt:234:                                    Icon(Icons.Default.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error)
+app/src/main/java/com/example/ImportRecognitionScreen.kt:247:                            Text("Настройки XML-УПД:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ImportRecognitionScreen.kt:252:                                Text("Создавать новые товары автоматически")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:257:                                Text("Обновить существующие товары")
+app/src/main/java/com/example/ImportRecognitionScreen.kt:263:                                label = { Text("Вид ШК (из КодТов)") },
+app/src/main/java/com/example/ImportRecognitionScreen.kt:287:                Text("НАЧАТЬ", fontWeight = FontWeight.Black)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:48:                title = { Text(session?.title ?: "Детали импорта", fontWeight = FontWeight.Black) },
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:51:                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:59:                                Icon(Icons.Default.FileDownload, contentDescription = "Экспорт")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:65:                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { 
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:71:                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { 
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:77:                                DropdownMenuItem(text = { Text("В JSON") }, onClick = { 
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:83:                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { 
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:121:                            Text("Статус: ${session!!.status.displayName}")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:123:                                Text("Распознано: ${session!!.totalCodes} кодов", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:145:                                            Text("${session!!.files.size} файлов", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:150:                                            Text("Файлы сессии:", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:167:                                                    val labelType = if (file.type == "xml" || file.type == "json") "элементов" else "строк"
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:194:                                Text("Исходные данные", fontWeight = FontWeight.Bold)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:216:                            Text("Сверка")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:231:                                Text("Учет")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:238:                            text = "Режим: Сверка",
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:254:                                Text("Учет")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:265:                        Text("Обработка... ${(session!!.progress * 100).toInt()}%")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:306:                                    "Учтено: ${currentAccounting.displayName}",
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:311:                                    Text("Отменить")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:321:                            text = { Text("Плоский список") }
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:326:                            text = { Text("По GTIN") }
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:332:                                text = { Text("Отсканированные") }
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:418:                                    Text("Товар: ${product!!.product.name}", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary, modifier = Modifier.padding(top = 8.dp))
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:420:                                        Text("Открыть товар")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:423:                                    Text("Товар не найден", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(top = 8.dp))
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:425:                                        Text("Добавить товар")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:511:                                    Text("Товар не найден", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:513:                                Text("Кодов: ${gtinCodes.size}" + if (scannedCodes.isNotEmpty()) " (Отсканировано: $scannedGtinCount)" else "", style = MaterialTheme.typography.bodySmall)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:528:                                    Text(if (product != null) "Открыть товар" else "Добавить товар")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:587:                        Text(if (product != null) "Открыть товар" else "Добавить товар")
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:645:                    text = "НЕТ В УПД",
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:655:            Text("Отсканирован: ${scans.size} раз", style = MaterialTheme.typography.bodySmall, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.secondary)
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:666:        val itemTypeLabel = if (file?.type == "xml" || file?.type == "json") "Индекс" else "Строка"
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:673:            title = { Text("Информация о файле") },
+app/src/main/java/com/example/ImportSessionDetailsScreen.kt:676:                    Text("Файл: ${truncateMiddle(fileName, 30)}")
+app/src/main/java/com/example/ScanSessionViewModel.kt:50:        val session = FreeScanSession(id, "Свободное сканирование", dateStr, emptyList())
+app/src/main/java/com/example/AccountingViewModel.kt:10:    RECEIPT("Приёмка"),
+app/src/main/java/com/example/AccountingViewModel.kt:11:    SHIPMENT("Отгрузка")
+app/src/main/java/com/example/UsbComScanner.kt:63:                        sendStatus("Разрешение отклонено")
+app/src/main/java/com/example/UsbComScanner.kt:82:                        sendStatus("Устройство отключено")
+app/src/main/java/com/example/UsbComScanner.kt:148:                sendStatus("Ожидание разрешения...")
+app/src/main/java/com/example/UsbComScanner.kt:159:            sendStatus("Устройство не найдено")
+app/src/main/java/com/example/UsbComScanner.kt:166:            sendStatus("Драйвер не найден")
+app/src/main/java/com/example/UsbComScanner.kt:173:                sendStatus("Не удалось открыть устройство")
+app/src/main/java/com/example/UsbComScanner.kt:186:            sendStatus("Подключено")
+app/src/main/java/com/example/UsbComScanner.kt:190:            sendStatus("Ошибка подключения")
+app/src/main/java/com/example/UsbComScanner.kt:225:                    sendStatus("Связь потеряна")
+app/src/main/java/com/example/UsbComScanner.kt:254:            sendStatus(if (reconnectAttempts >= MAX_RECONNECT_ATTEMPTS) "Переподключение не удалось" else "Отключено")
+app/src/main/java/com/example/UsbComScanner.kt:258:        sendStatus("Переподключение ($reconnectAttempts/$MAX_RECONNECT_ATTEMPTS)...")
+app/src/main/java/com/example/UsbComScanner.kt:279:        sendStatus("Отключено")
+app/src/main/java/com/example/UpdParser.kt:34:                        "СведТов" -> {
+app/src/main/java/com/example/UpdParser.kt:35:                            lineNumber = parser.getAttributeValue(null, "НомТек") ?: ""
+app/src/main/java/com/example/UpdParser.kt:36:                            name = parser.getAttributeValue(null, "НаимТов") ?: ""
+app/src/main/java/com/example/UpdParser.kt:37:                            quantity = parser.getAttributeValue(null, "КолТов") ?: ""
+app/src/main/java/com/example/UpdParser.kt:40:                        "КИЗ" -> {
+app/src/main/java/com/example/UpdParser.kt:51:                    if (parser.name == "СведТов") {
+app/src/main/java/com/example/UpdParser.kt:75:            if (currentEvent == XmlPullParser.START_TAG && parser.name == "КИЗ") {
+app/src/main/java/com/example/ExportService.kt:31:                    writer.write("Штрихкод;Нормализованный КИЗ;GTIN\n")
+app/src/main/java/com/example/ExportService.kt:73:                serializer.startTag(null, "Файл")
+app/src/main/java/com/example/ExportService.kt:75:                serializer.startTag(null, "Документ")
+app/src/main/java/com/example/ExportService.kt:76:                serializer.startTag(null, "СвСчФакт")
+app/src/main/java/com/example/ExportService.kt:80:                    serializer.startTag(null, "СведТов")
+app/src/main/java/com/example/ExportService.kt:81:                    serializer.attribute(null, "НомТек", rowNumber.toString())
+app/src/main/java/com/example/ExportService.kt:82:                    serializer.attribute(null, "НаимТов", "Товар GTIN $gtin")
+app/src/main/java/com/example/ExportService.kt:83:                    serializer.attribute(null, "КолТов", groupedCodes.size.toString())
+app/src/main/java/com/example/ExportService.kt:86:                        serializer.startTag(null, "КИЗ")
+app/src/main/java/com/example/ExportService.kt:88:                        serializer.endTag(null, "КИЗ")
+app/src/main/java/com/example/ExportService.kt:91:                    serializer.endTag(null, "СведТов")
+app/src/main/java/com/example/ExportService.kt:95:                serializer.endTag(null, "СвСчФакт")
+app/src/main/java/com/example/ExportService.kt:96:                serializer.endTag(null, "Документ")
+app/src/main/java/com/example/ExportService.kt:97:                serializer.endTag(null, "Файл")
+app/src/main/java/com/example/ExportService.kt:120:                    writer.write("    <Cell><Data ss:Type=\"String\">Штрихкод</Data></Cell>\n")
+app/src/main/java/com/example/ExportService.kt:121:                    writer.write("    <Cell><Data ss:Type=\"String\">Нормализованный КИЗ</Data></Cell>\n")
+app/src/main/java/com/example/ExportService.kt:183:        val chooser = Intent.createChooser(intent, "Экспорт файла")
+app/src/main/java/com/example/SettingsViewModel.kt:9:    private val _defaultScannerMode = MutableStateFlow("Камера")

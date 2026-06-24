@@ -9,7 +9,7 @@ data class ProductEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
     val gtin: String,
-    val category: String = "Без категории"
+    val category: String = ""
 )
 
 @Entity(

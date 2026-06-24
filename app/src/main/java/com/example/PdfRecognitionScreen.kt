@@ -58,10 +58,10 @@ fun PdfRecognitionScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Распознавание PDF", fontWeight = FontWeight.Black) },
+                title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_40), fontWeight = FontWeight.Black) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -77,7 +77,7 @@ fun PdfRecognitionScreen(
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
-                Icon(Icons.Default.Add, contentDescription = "Новая сессия")
+                Icon(Icons.Default.Add, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_157))
             }
         }
     ) { innerPadding ->
@@ -88,7 +88,7 @@ fun PdfRecognitionScreen(
         ) {
             if (sessions.isEmpty()) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    EmptyState(title = "Нет сессий", subtitle = "Нажмите + чтобы создать новую сессию распознавания")
+                    EmptyState(title = androidx.compose.ui.res.stringResource(com.example.R.string.str_42), subtitle = androidx.compose.ui.res.stringResource(com.example.R.string.str_160))
                 }
             } else {
                 LazyColumn(
@@ -132,7 +132,7 @@ fun PdfSessionCard(session: PdfSession, onClick: () -> Unit) {
                 )
                 SuggestionChip(
                     onClick = { },
-                    label = { Text(session.status.displayName) },
+                    label = { Text(androidx.compose.ui.res.stringResource(session.status.displayNameRes)) },
                     colors = SuggestionChipDefaults.suggestionChipColors(
                         containerColor = when (session.status) {
                             PdfSessionStatus.COMPLETED -> MaterialTheme.colorScheme.primaryContainer
@@ -157,7 +157,7 @@ fun PdfSessionCard(session: PdfSession, onClick: () -> Unit) {
                 )
                 if (session.status == PdfSessionStatus.COMPLETED) {
                     Text(
-                        text = "Кодов: ${session.totalCodes}",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.str_159, session.totalCodes),
                         style = MaterialTheme.typography.bodySmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -195,12 +195,13 @@ fun CreatePdfSessionScreen(
     val selectedUris = remember { mutableStateListOf<android.net.Uri>() }
     val selectedFiles = remember { mutableStateListOf<String>() }
 
+    val fallbackName = androidx.compose.ui.res.stringResource(com.example.R.string.str_158)
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetMultipleContents(),
         onResult = { uris ->
             uris.forEach { uri ->
                 selectedUris.add(uri)
-                val fileName = getFileName(context, uri) ?: "Неизвестный_документ.pdf"
+                val fileName = getFileName(context, uri) ?: fallbackName
                 selectedFiles.add(fileName)
             }
         }
@@ -209,10 +210,10 @@ fun CreatePdfSessionScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Новая сессия", fontWeight = FontWeight.Black) },
+                title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_157), fontWeight = FontWeight.Black) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -242,18 +243,18 @@ fun CreatePdfSessionScreen(
             ) {
                 Icon(Icons.Default.AttachFile, contentDescription = null)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Выбрать файл(ы)")
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_156))
             }
 
             if (selectedFiles.isEmpty()) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     Text(
-                        text = "Выберите PDF файлы для распознавания",
+                        text = androidx.compose.ui.res.stringResource(com.example.R.string.str_155),
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                     )
                 }
             } else {
-                Text("Выбранные файлы:", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_154), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -274,7 +275,7 @@ fun CreatePdfSessionScreen(
                                     selectedFiles.removeAt(index)
                                     selectedUris.removeAt(index)
                                 }) {
-                                    Icon(Icons.Default.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error)
+                                    Icon(Icons.Default.Delete, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_130), tint = MaterialTheme.colorScheme.error)
                                 }
                             }
                         }
@@ -298,7 +299,7 @@ fun CreatePdfSessionScreen(
                     contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             ) {
-                Text("НАЧАТЬ", fontWeight = FontWeight.Black)
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_153), fontWeight = FontWeight.Black)
             }
         }
     }

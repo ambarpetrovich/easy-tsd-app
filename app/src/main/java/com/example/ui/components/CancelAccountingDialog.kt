@@ -21,10 +21,10 @@ fun CancelAccountingDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Отмена учета") },
+        title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_30)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("Вы уверены, что хотите отменить принятие сессии к учету? Для подтверждения решите пример:")
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_29))
                 Text("$num1 + $num2 = ?", style = MaterialTheme.typography.titleMedium)
                 OutlinedTextField(
                     value = answer,
@@ -32,13 +32,13 @@ fun CancelAccountingDialog(
                         answer = it
                         hasError = false
                     },
-                    label = { Text("Ответ") },
+                    label = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_28)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     isError = hasError,
                     singleLine = true
                 )
                 if (hasError) {
-                    Text("Неверный ответ", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_27), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
                 }
             }
         },
@@ -53,12 +53,12 @@ fun CancelAccountingDialog(
                     }
                 }
             ) {
-                Text("Подтвердить")
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_15))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_13))
             }
         }
     )

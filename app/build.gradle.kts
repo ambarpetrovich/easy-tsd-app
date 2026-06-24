@@ -123,3 +123,45 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   "ksp"(libs.moshi.kotlin.codegen)
 }
+
+tasks.register("applyLocalization") {
+    doLast {
+        val srcDir = file("src/main/java")
+        val resDir = file("src/main/res")
+        val valuesDir = file(resDir.absolutePath + "/values")
+        
+        val xmlContent = file(valuesDir.absolutePath + "/strings_auto.xml").readText()
+        val regexXml = Regex("<string name=\"(str_\\d+)\">(.*?)</string>")
+        val stringMap = mutableMapOf<String, String>()
+        for (match in regexXml.findAll(xmlContent)) {
+            val key = match.groupValues[1]
+            val value = match.groupValues[2].replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("\\'", "'")
+            stringMap[value] = key
+        }
+        
+        val filesToProcess = srcDir.walkTopDown().filter { it.isFile && it.extension == "kt" }.toList()
+        
+        for (f in filesToProcess) {
+            if (f.name == "UpdParser.kt" || f.name == "ExportService.kt" || f.name == "AppDatabase.kt" || f.name == "AppNavigation.kt" || f.name == "CameraScanner.kt" || f.name.contains("ViewModel") || f.name == "UsbComScanner.kt") continue
+            
+            var text = f.readText()
+            var modified = false
+            
+            // Note: This does a simple text replacement for Compose files only.
+            // We only replace exact string matches with stringResource(R.string.key)
+            // It might fail for strings inside string interpolation if they contain variables.
+            for ((value, key) in stringMap) {
+                val targetStr = "\"$value\""
+                if (text.contains(targetStr)) {
+                    // check if it's already localized (this is naive but works for first pass)
+                    text = text.replace(targetStr, "androidx.compose.ui.res.stringResource(com.example.R.string.$key)")
+                    modified = true
+                }
+            }
+            
+            if (modified) {
+                f.writeText(text)
+            }
+        }
+    }
+}

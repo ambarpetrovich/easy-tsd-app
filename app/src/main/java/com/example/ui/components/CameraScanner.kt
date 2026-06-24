@@ -13,7 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -60,63 +60,67 @@ fun CameraPreview(onBarcodeScanned: (String) -> Unit) {
             val executor = ContextCompat.getMainExecutor(ctx)
             
             cameraProviderFuture.addListener({
-                val cameraProvider = cameraProviderFuture.get()
-                val preview = Preview.Builder().build().also {
-                    it.surfaceProvider = previewView.surfaceProvider
-                }
+                try {
+                    val cameraProvider = cameraProviderFuture.get()
+                    val preview = Preview.Builder().build().also {
+                        it.surfaceProvider = previewView.surfaceProvider
+                    }
 
-                val options = BarcodeScannerOptions.Builder()
-                    .setBarcodeFormats(Barcode.FORMAT_DATA_MATRIX, Barcode.FORMAT_QR_CODE, Barcode.FORMAT_CODE_128, Barcode.FORMAT_EAN_13)
-                    .build()
-                
-                val barcodeScanner = BarcodeScanning.getClient(options)
-                val analysisExecutor = Executors.newSingleThreadExecutor()
+                    val options = BarcodeScannerOptions.Builder()
+                        .setBarcodeFormats(Barcode.FORMAT_DATA_MATRIX, Barcode.FORMAT_QR_CODE, Barcode.FORMAT_CODE_128, Barcode.FORMAT_EAN_13)
+                        .build()
+                    
+                    val barcodeScanner = BarcodeScanning.getClient(options)
+                    val analysisExecutor = Executors.newSingleThreadExecutor()
 
-                val imageAnalysis = ImageAnalysis.Builder()
-                    .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                    .build()
-                    .also {
-                        it.setAnalyzer(analysisExecutor) { imageProxy ->
-                            val mediaImage = imageProxy.image
-                            if (mediaImage != null) {
-                                val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-                                barcodeScanner.process(image)
-                                    .addOnSuccessListener { barcodes ->
-                                        for (barcode in barcodes) {
-                                            val rawValue = barcode.rawValue
-                                            if (rawValue != null) {
-                                                val currentTime = System.currentTimeMillis()
-                                                if (currentTime - lastScannedTime > 1500) { // 1.5 seconds debounce
-                                                    lastScannedTime = currentTime
-                                                    onBarcodeScanned(rawValue)
+                    val imageAnalysis = ImageAnalysis.Builder()
+                        .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                        .build()
+                        .also {
+                            it.setAnalyzer(analysisExecutor) { imageProxy ->
+                                val mediaImage = imageProxy.image
+                                if (mediaImage != null) {
+                                    val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+                                    barcodeScanner.process(image)
+                                        .addOnSuccessListener { barcodes ->
+                                            for (barcode in barcodes) {
+                                                val rawValue = barcode.rawValue
+                                                if (rawValue != null) {
+                                                    val currentTime = System.currentTimeMillis()
+                                                    if (currentTime - lastScannedTime > 1500) { // 1.5 seconds debounce
+                                                        lastScannedTime = currentTime
+                                                        onBarcodeScanned(rawValue)
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    .addOnFailureListener { e ->
-                                        Log.e("CameraScanner", "Barcode scanning failed", e)
-                                    }
-                                    .addOnCompleteListener {
-                                        imageProxy.close()
-                                    }
-                            } else {
-                                imageProxy.close()
+                                        .addOnFailureListener { e ->
+                                            Log.e("CameraScanner", "Barcode scanning failed", e)
+                                        }
+                                        .addOnCompleteListener {
+                                            imageProxy.close()
+                                        }
+                                } else {
+                                    imageProxy.close()
+                                }
                             }
                         }
+
+                    val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+                    try {
+                        cameraProvider.unbindAll()
+                        cameraProvider.bindToLifecycle(
+                            lifecycleOwner,
+                            cameraSelector,
+                            preview,
+                            imageAnalysis
+                        )
+                    } catch (e: Exception) {
+                        Log.e("CameraScanner", "Use case binding failed", e)
                     }
-
-                val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-                try {
-                    cameraProvider.unbindAll()
-                    cameraProvider.bindToLifecycle(
-                        lifecycleOwner,
-                        cameraSelector,
-                        preview,
-                        imageAnalysis
-                    )
                 } catch (e: Exception) {
-                    Log.e("CameraScanner", "Use case binding failed", e)
+                    Log.e("CameraScanner", "Camera initialization failed", e)
                 }
             }, executor)
             

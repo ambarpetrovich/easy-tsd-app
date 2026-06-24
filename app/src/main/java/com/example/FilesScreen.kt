@@ -25,7 +25,7 @@ fun FilesScreen(
         topBar = {
             TopAppBar(
                 title = { 
-                    Text("Файлы", fontWeight = FontWeight.Black) 
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_110), fontWeight = FontWeight.Black) 
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.secondary,
@@ -44,24 +44,24 @@ fun FilesScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             ActionCard(
-                title = "Распознавание DataMatrix в PDF",
-                description = "Извлечение полных кодов маркировки и GTIN из PDF-файлов",
+                title = androidx.compose.ui.res.stringResource(com.example.R.string.str_109),
+                description = androidx.compose.ui.res.stringResource(com.example.R.string.str_108),
                 icon = Icons.Default.PictureAsPdf,
                 onClick = onNavigateToPdfSessions
             )
             
             ActionCard(
-                title = "Импорт XLSX, XML, CSV, JSON, TXT",
-                description = "Извлечение кодов, GTIN и наименований товаров",
+                title = androidx.compose.ui.res.stringResource(com.example.R.string.str_107),
+                description = androidx.compose.ui.res.stringResource(com.example.R.string.str_106),
                 icon = Icons.Default.Description,
                 onClick = onNavigateToImportSessions
             )
 
-            SectionHeader(title = "Загруженные файлы")
+            SectionHeader(title = androidx.compose.ui.res.stringResource(com.example.R.string.str_105))
 
             EmptyState(
-                title = "Нет файлов",
-                subtitle = "Загрузите файл для обработки"
+                title = androidx.compose.ui.res.stringResource(com.example.R.string.str_104),
+                subtitle = androidx.compose.ui.res.stringResource(com.example.R.string.str_103)
             )
         }
     }

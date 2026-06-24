@@ -31,30 +31,30 @@ fun AccountingVerificationDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Принять к учету") },
+        title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_26)) },
         text = {
             if (!showWarnings) {
                 Column {
-                    Text("Выберите тип операции учета:")
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_25))
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
                         Button(onClick = { selectedType = AccountingType.RECEIPT }) {
-                            Text("Приёмка")
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_24))
                         }
                         Button(onClick = { selectedType = AccountingType.SHIPMENT }) {
-                            Text("Отгрузка")
+                            Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_23))
                         }
                     }
                     if (selectedType != null) {
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Выбрано: ${selectedType!!.displayName}", fontWeight = FontWeight.Bold)
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_22, androidx.compose.ui.res.stringResource(selectedType!!.displayNameRes)), fontWeight = FontWeight.Bold)
                     }
                 }
             } else {
                 Column(modifier = Modifier.fillMaxHeight(0.8f)) {
-                    Text("Предупреждение!", color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_21), color = MaterialTheme.colorScheme.error, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("У ${warnings.size} кодов тип последней операции совпадает с текущим (${selectedType!!.displayName}).")
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_20, warnings.size, androidx.compose.ui.res.stringResource(selectedType!!.displayNameRes)))
                     Spacer(modifier = Modifier.height(8.dp))
                     
                     LazyColumn(modifier = Modifier.weight(1f)) {
@@ -64,19 +64,19 @@ fun AccountingVerificationDialog(
                                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer)
                             ) {
                                 Column(modifier = Modifier.padding(8.dp)) {
-                                    Text("Код: $code", fontWeight = FontWeight.Bold)
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_19, code), fontWeight = FontWeight.Bold)
                                     Spacer(modifier = Modifier.height(4.dp))
-                                    Text("История операций:", style = MaterialTheme.typography.labelSmall)
+                                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_18), style = MaterialTheme.typography.labelSmall)
                                     ops.forEach { op ->
                                         val dateStr = SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault()).format(Date(op.timestamp))
-                                        Text("- ${op.type.displayName} ($dateStr) в [${op.sessionName}]", style = MaterialTheme.typography.labelSmall)
+                                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_17, androidx.compose.ui.res.stringResource(op.type.displayNameRes), dateStr, op.sessionName), style = MaterialTheme.typography.labelSmall)
                                     }
                                 }
                             }
                         }
                     }
                     
-                    Text("Все равно принять к учету?", fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp))
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_16), fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 8.dp))
                 }
             }
         },
@@ -97,13 +97,13 @@ fun AccountingVerificationDialog(
                         onDismiss()
                     }
                 }) {
-                    Text(if (showWarnings) "Подтвердить" else "Проверить и Принять")
+                    Text(if (showWarnings) androidx.compose.ui.res.stringResource(com.example.R.string.str_15) else androidx.compose.ui.res.stringResource(com.example.R.string.str_14))
                 }
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Отмена")
+                Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_13))
             }
         }
     )

@@ -21,11 +21,11 @@ fun HistoryScreen(onBack: () -> Unit = {}) {
         topBar = {
             TopAppBar(
                 title = { 
-                    Text("История версий", fontWeight = FontWeight.Black) 
+                    Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_69), fontWeight = FontWeight.Black) 
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Назад")
+                        Icon(Icons.Default.ArrowBack, contentDescription = androidx.compose.ui.res.stringResource(com.example.R.string.str_68))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -43,9 +43,9 @@ fun HistoryScreen(onBack: () -> Unit = {}) {
                 .padding(16.dp)
         ) {
             val dummyVersions = listOf(
-                Pair("0.6.9", "2026-06-19 - Единый промышленный UI"),
-                Pair("0.6.1", "2026-06-19 - Настройки USB-COM"),
-                Pair("0.6.0", "2026-06-18 - USB-COM: полная переработка плагина на Kotlin")
+                Pair("0.6.9", androidx.compose.ui.res.stringResource(com.example.R.string.str_67)),
+                Pair("0.6.1", androidx.compose.ui.res.stringResource(com.example.R.string.str_66)),
+                Pair("0.6.0", androidx.compose.ui.res.stringResource(com.example.R.string.str_65))
             )
 
             LazyColumn(
@@ -83,7 +83,7 @@ fun HistoryScreen(onBack: () -> Unit = {}) {
                             
                             Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = "Версия ${version.first}",
+                                    text = androidx.compose.ui.res.stringResource(com.example.R.string.str_64, version.first),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface

@@ -77,27 +77,28 @@ fun HomeScreen(
                 Row(modifier = Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     Icon(Icons.Default.Star, contentDescription = null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(40.dp))
                     Column {
-                        Text("Умная приемка и отгрузка", fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
-                        Text("Проверка и учет КИЗов. Сверка и инвентаризация по любым файлам (PDF, XML, Excel).", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_46), fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onPrimaryContainer)
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_45), style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onPrimaryContainer)
                     }
                 }
             }
 
             ActionCard(
-                title = "Свободное сканирование",
-                description = "Сканируйте штрих-коды без привязки к документу.",
+                title = androidx.compose.ui.res.stringResource(com.example.R.string.str_36),
+                description = androidx.compose.ui.res.stringResource(com.example.R.string.str_44),
                 icon = Icons.Default.QrCode,
                 onClick = { onNavigateToScan(null) }
             )
             
-            SectionHeader(title = "Предыдущие сессии")
+            SectionHeader(title = androidx.compose.ui.res.stringResource(com.example.R.string.str_43))
             
             val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
+            val validFreeScanSessions = freeScanSessions.filter { s -> s.scannedCodes.any { it.normalizedCode.contains("01") && it.normalizedCode.contains("21") } }
             
-            if (pdfSessions.isEmpty() && importSessions.isEmpty() && freeScanSessions.isEmpty()) {
+            if (pdfSessions.isEmpty() && importSessions.isEmpty() && validFreeScanSessions.isEmpty()) {
                 EmptyState(
-                    title = "Нет сессий",
-                    subtitle = "Создайте новую сессию из файлов или начните свободное сканирование"
+                    title = androidx.compose.ui.res.stringResource(com.example.R.string.str_42),
+                    subtitle = androidx.compose.ui.res.stringResource(com.example.R.string.str_41)
                 )
             } else {
                 pdfSessions.sortedByDescending { 
@@ -107,7 +108,7 @@ fun HomeScreen(
                         SessionCard(
                             title = session.title, 
                             date = session.date, 
-                            type = if (session.type == PdfSessionType.RECOGNITION) "Распознавание PDF" else "Инвентаризация PDF", 
+                            type = if (session.type == PdfSessionType.RECOGNITION) androidx.compose.ui.res.stringResource(com.example.R.string.str_40) else androidx.compose.ui.res.stringResource(com.example.R.string.str_39), 
                             codesCount = session.totalCodes,
                             accountingType = accountingStatus[session.id]
                         )
@@ -120,20 +121,20 @@ fun HomeScreen(
                         SessionCard(
                             title = session.title, 
                             date = session.date, 
-                            type = if (session.type == ImportSessionType.RECOGNITION) "Импорт данных" else "Инвентаризация (Импорт)", 
+                            type = if (session.type == ImportSessionType.RECOGNITION) androidx.compose.ui.res.stringResource(com.example.R.string.str_38) else androidx.compose.ui.res.stringResource(com.example.R.string.str_37), 
                             codesCount = session.totalCodes,
                             accountingType = accountingStatus[session.id]
                         )
                     }
                 }
-                freeScanSessions.sortedByDescending { 
+                validFreeScanSessions.sortedByDescending { 
                     try { dateFormat.parse(it.date)?.time ?: 0L } catch (e: Exception) { 0L }
                 }.forEach { session ->
                     Card(modifier = Modifier.clickable { onNavigateToScan(session.id) }) {
                         SessionCard(
                             title = session.title, 
                             date = session.date, 
-                            type = "Свободное сканирование", 
+                            type = androidx.compose.ui.res.stringResource(com.example.R.string.str_36), 
                             codesCount = session.scannedCodes.size,
                             accountingType = accountingStatus[session.id]
                         )
@@ -145,17 +146,17 @@ fun HomeScreen(
         if (showFeatureInfo) {
             AlertDialog(
                 onDismissRequest = { showFeatureInfo = false },
-                title = { Text("Как это работает?", fontWeight = FontWeight.Bold) },
+                title = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_35), fontWeight = FontWeight.Bold) },
                 text = {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Text("1. Загрузите файлы с кодами маркировки (PDF, Excel, XML, CSV).")
-                        Text("2. Сверьте данные сканированием с помощью камеры или сканера штрихкодов.")
-                        Text("3. Примите отсканированное к учету (Приёмка/Отгрузка) для будущих проверок и контроля остатков.")
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_34))
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_33))
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_32))
                     }
                 },
                 confirmButton = {
                     TextButton(onClick = { showFeatureInfo = false }) {
-                        Text("Понятно")
+                        Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_31))
                     }
                 }
             )

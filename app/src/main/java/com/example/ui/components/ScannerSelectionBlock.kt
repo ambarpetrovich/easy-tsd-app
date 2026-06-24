@@ -33,7 +33,7 @@ fun ScannerSelectionBlock(
 ) {
     val defaultScanner by settingsViewModel.defaultScannerMode.collectAsState()
     var selectedScanner by remember(defaultScanner) { mutableStateOf(defaultScanner) }
-    val scanners = listOf("Камера", "HID-сканер", "USB-COM")
+    val scanners = listOf(androidx.compose.ui.res.stringResource(com.example.R.string.str_12), androidx.compose.ui.res.stringResource(com.example.R.string.str_11), "USB-COM")
 
     Column(
         modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
@@ -56,7 +56,7 @@ fun ScannerSelectionBlock(
         Spacer(modifier = Modifier.height(16.dp))
 
         when (selectedScanner) {
-            "Камера" -> {
+            androidx.compose.ui.res.stringResource(com.example.R.string.str_12) -> {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -70,7 +70,7 @@ fun ScannerSelectionBlock(
                     })
                 }
             }
-            "HID-сканер" -> {
+            androidx.compose.ui.res.stringResource(com.example.R.string.str_11) -> {
                 HidScannerView(onBarcodeScanned, onSimulateScan)
             }
             "USB-COM" -> {
@@ -100,13 +100,13 @@ fun HidScannerView(onBarcodeScanned: (String) -> Unit, onSimulateScan: () -> Uni
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "HID-сканер (Клавиатура)",
+                text = androidx.compose.ui.res.stringResource(com.example.R.string.str_10),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Наведите сканер на штрих-код",
+                text = androidx.compose.ui.res.stringResource(com.example.R.string.str_9),
                 style = MaterialTheme.typography.bodyMedium
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -136,11 +136,11 @@ fun HidScannerView(onBarcodeScanned: (String) -> Unit, onSimulateScan: () -> Uni
                             false
                         }
                     },
-                placeholder = { Text("Ожидание ввода...") },
+                placeholder = { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_8)) },
                 singleLine = true
             )
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = onSimulateScan) { Text("Эмулировать") }
+            Button(onClick = onSimulateScan) { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_2)) }
         }
     }
 }
@@ -149,7 +149,8 @@ fun HidScannerView(onBarcodeScanned: (String) -> Unit, onSimulateScan: () -> Uni
 fun UsbComScannerView(onBarcodeScanned: (String) -> Unit, onSimulateScan: () -> Unit) {
     val context = LocalContext.current
     val usbComScanner = remember { UsbComScanner(context) }
-    var status by remember { mutableStateOf("Инициализация...") }
+    val initialStatus = androidx.compose.ui.res.stringResource(com.example.R.string.str_7)
+    var status by remember { mutableStateOf(initialStatus) }
 
     LaunchedEffect(usbComScanner) {
         usbComScanner.autoConnect()
@@ -183,20 +184,20 @@ fun UsbComScannerView(onBarcodeScanned: (String) -> Unit, onSimulateScan: () -> 
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "USB-COM сканер",
+                text = androidx.compose.ui.res.stringResource(com.example.R.string.str_6),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "Статус: $status",
+                text = androidx.compose.ui.res.stringResource(com.example.R.string.str_5, status),
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (status == "Подключено") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+                color = if (status == androidx.compose.ui.res.stringResource(com.example.R.string.str_4)) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { usbComScanner.autoConnect() }) { Text("Переподключить") }
+            Button(onClick = { usbComScanner.autoConnect() }) { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_3)) }
             Spacer(modifier = Modifier.height(8.dp))
-            Button(onClick = onSimulateScan) { Text("Эмулировать") }
+            Button(onClick = onSimulateScan) { Text(androidx.compose.ui.res.stringResource(com.example.R.string.str_2)) }
         }
     }
 }

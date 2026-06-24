@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-enum class AccountingType(val displayName: String) {
-    RECEIPT("Приёмка"),
-    SHIPMENT("Отгрузка")
+enum class AccountingType(@androidx.annotation.StringRes val displayNameRes: Int) {
+    RECEIPT(R.string.accounting_receipt),
+    SHIPMENT(R.string.accounting_shipment)
 }
 
 data class AccountingOperation(

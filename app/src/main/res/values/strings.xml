@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">EasyTSD</string>
+    <string name="nav_home">Начало</string>
+    <string name="nav_scan">Скан</string>
+    <string name="nav_files">Файлы</string>
+    <string name="nav_settings">Настройки</string>
+    <string name="nav_history">История версий</string>
+    <string name="nav_products">Товары</string>
+    <string name="nav_pdf_sessions">Распознавание PDF</string>
+    <string name="nav_create_pdf_session">Новая сессия</string>
+    <string name="nav_pdf_session_details">Детали сессии</string>
+    <string name="nav_import_sessions">Импорт данных</string>
+    <string name="nav_create_import_session">Новая сессия импорта</string>
+    <string name="nav_import_session_details">Детали импорта</string>
+
+    <string name="status_pending">Ожидает</string>
+    <string name="status_in_progress">В процессе</string>
+    <string name="status_completed">Завершено</string>
+    <string name="status_failed">Ошибка</string>
+    
+    <string name="accounting_receipt">Приёмка</string>
+    <string name="accounting_shipment">Отгрузка</string>
+
+    <string name="session_of_n_files">Сессия из %d файлов</string>
+    <string name="import_n_files">Импорт %d файлов</string>
 </resources>

@@ -13,11 +13,11 @@ import java.util.Date
 import java.util.Locale
 import java.util.UUID
 
-enum class PdfSessionStatus(val displayName: String) {
-    PENDING("Ожидает"),
-    IN_PROGRESS("В процессе"),
-    COMPLETED("Завершено"),
-    FAILED("Ошибка")
+enum class PdfSessionStatus(@androidx.annotation.StringRes val displayNameRes: Int) {
+    PENDING(R.string.status_pending),
+    IN_PROGRESS(R.string.status_in_progress),
+    COMPLETED(R.string.status_completed),
+    FAILED(R.string.status_failed)
 }
 
 data class PdfFile(
@@ -109,7 +109,7 @@ class PdfSessionViewModel : ViewModel() {
     fun createSession(uris: List<android.net.Uri>, filenames: List<String>, context: android.content.Context) {
         val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         val dateStr = format.format(Date())
-        val title = if (filenames.size == 1) filenames.first() else "Сессия из ${filenames.size} файлов"
+        val title = if (filenames.size == 1) filenames.first() else context.getString(R.string.session_of_n_files, filenames.size)
         val sessionId = UUID.randomUUID().toString()
         val pdfFiles = filenames.map { PdfFile(it, 1, 0) } // We don't have page counts yet without parsing
         

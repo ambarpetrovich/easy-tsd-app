@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EasyTSD</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_scan">Scan</string>
+    <string name="nav_files">Files</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_history">Version History</string>
+    <string name="nav_products">Products</string>
+    <string name="nav_pdf_sessions">PDF Recognition</string>
+    <string name="nav_create_pdf_session">New Session</string>
+    <string name="nav_pdf_session_details">Session Details</string>
+    <string name="nav_import_sessions">Data Import</string>
+    <string name="nav_create_import_session">New Import Session</string>
+    <string name="nav_import_session_details">Import Details</string>
+
+    <string name="status_pending">Pending</string>
+    <string name="status_in_progress">In Progress</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_failed">Error</string>
+    
+    <string name="accounting_receipt">Receipt</string>
+    <string name="accounting_shipment">Shipment</string>
+
+    <string name="session_of_n_files">Session of %d files</string>
+    <string name="import_n_files">Import %d files</string>
+</resources>

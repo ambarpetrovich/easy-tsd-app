@@ -1,0 +1,19 @@
+const fs = require('fs');
+const { execSync } = require('child_process');
+
+// run grep from /app
+const files = execSync('cd /app && grep -rlI "[А-Яа-я]" src/main/java/').toString().split('\n').filter(Boolean).map(f => '/app/' + f);
+
+let allStrings = new Set();
+const regex = /"([^"\\]*(?:\\.[^"\\]*)*[А-Яа-я]+[^"\\]*(?:\\.[^"\\]*)*)"/g;
+
+files.forEach(file => {
+    if (file.includes('UpdParser.kt') || file.includes('ExportService.kt')) return;
+    const content = fs.readFileSync(file, 'utf-8');
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+        allStrings.add(match[1]);
+    }
+});
+
+console.log(JSON.stringify(Array.from(allStrings), null, 2));

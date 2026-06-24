@@ -10,9 +10,22 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.example.ui.theme.MyApplicationTheme
 
+import android.content.res.Configuration
+import java.util.Locale
+
 class MainActivity : ComponentActivity() {
+  override fun attachBaseContext(newBase: android.content.Context) {
+      val lang = LanguageManager.getLanguage(newBase)
+      val locale = Locale(lang)
+      Locale.setDefault(locale)
+      val config = Configuration(newBase.resources.configuration)
+      config.setLocale(locale)
+      super.attachBaseContext(newBase.createConfigurationContext(config))
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    LanguageManager.init(this)
     enableEdgeToEdge()
     setContent {
       MyApplicationTheme {

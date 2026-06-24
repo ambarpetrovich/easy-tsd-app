@@ -27,30 +27,30 @@ import androidx.navigation.compose.rememberNavController
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 
-sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
-    object Home : Screen("home", "Начало", Icons.Filled.Home)
-    object Scan : Screen("scan?sessionId={sessionId}", "Скан", Icons.Filled.QrCodeScanner) {
+sealed class Screen(val route: String, val titleRes: Int, val icon: ImageVector) {
+    object Home : Screen("home", R.string.nav_home, Icons.Filled.Home)
+    object Scan : Screen("scan?sessionId={sessionId}", R.string.nav_scan, Icons.Filled.QrCodeScanner) {
         fun createRoute(sessionId: String? = null): String {
             return if (sessionId != null) "scan?sessionId=$sessionId" else "scan"
         }
     }
-    object Files : Screen("files", "Файлы", Icons.Filled.Folder)
-    object Settings : Screen("settings", "Настройки", Icons.Filled.Settings)
-    object History : Screen("history", "История версий", Icons.Filled.Settings)
-    object Products : Screen("products?action={action}&gtin={gtin}", "Товары", Icons.Filled.Settings) {
+    object Files : Screen("files", R.string.nav_files, Icons.Filled.Folder)
+    object Settings : Screen("settings", R.string.nav_settings, Icons.Filled.Settings)
+    object History : Screen("history", R.string.nav_history, Icons.Filled.Settings)
+    object Products : Screen("products?action={action}&gtin={gtin}", R.string.nav_products, Icons.Filled.Settings) {
         fun createRoute(action: String? = null, gtin: String? = null): String {
             if (action == null && gtin == null) return "products"
             return "products?action=${action ?: ""}&gtin=${gtin ?: ""}"
         }
     }
-    object PdfSessions : Screen("pdf_sessions", "Распознавание PDF", Icons.Filled.PictureAsPdf)
-    object CreatePdfSession : Screen("create_pdf_session", "Новая сессия", Icons.Filled.PictureAsPdf)
-    object PdfSessionDetails : Screen("pdf_session_details/{sessionId}", "Детали сессии", Icons.Filled.PictureAsPdf) {
+    object PdfSessions : Screen("pdf_sessions", R.string.nav_pdf_sessions, Icons.Filled.PictureAsPdf)
+    object CreatePdfSession : Screen("create_pdf_session", R.string.nav_create_pdf_session, Icons.Filled.PictureAsPdf)
+    object PdfSessionDetails : Screen("pdf_session_details/{sessionId}", R.string.nav_pdf_session_details, Icons.Filled.PictureAsPdf) {
         fun createRoute(sessionId: String) = "pdf_session_details/$sessionId"
     }
-    object ImportSessions : Screen("import_sessions", "Импорт данных", Icons.Filled.Description)
-    object CreateImportSession : Screen("create_import_session", "Новая сессия импорта", Icons.Filled.Description)
-    object ImportSessionDetails : Screen("import_session_details/{sessionId}", "Детали импорта", Icons.Filled.Description) {
+    object ImportSessions : Screen("import_sessions", R.string.nav_import_sessions, Icons.Filled.Description)
+    object CreateImportSession : Screen("create_import_session", R.string.nav_create_import_session, Icons.Filled.Description)
+    object ImportSessionDetails : Screen("import_session_details/{sessionId}", R.string.nav_import_session_details, Icons.Filled.Description) {
         fun createRoute(sessionId: String) = "import_session_details/$sessionId"
     }
 }
@@ -80,8 +80,8 @@ fun AppNavigation() {
 
                 bottomBarItems.forEach { screen ->
                     NavigationBarItem(
-                        icon = { Icon(screen.icon, contentDescription = screen.title) },
-                        label = { Text(screen.title) },
+                        icon = { Icon(screen.icon, contentDescription = androidx.compose.ui.res.stringResource(screen.titleRes)) },
+                        label = { Text(androidx.compose.ui.res.stringResource(screen.titleRes)) },
                         selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
                         onClick = {
                             navController.navigate(screen.route) {

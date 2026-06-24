@@ -141,7 +141,7 @@ fun SessionCard(
                     if (accountingType != null) {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "[${accountingType.displayName}]",
+                            text = "[${androidx.compose.ui.res.stringResource(accountingType.displayNameRes)}]",
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.tertiary
@@ -169,7 +169,7 @@ fun SessionCard(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
                 )
                 Text(
-                    text = "$codesCount кодов",
+                    text = androidx.compose.ui.res.stringResource(com.example.R.string.str_1, codesCount),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.primary
