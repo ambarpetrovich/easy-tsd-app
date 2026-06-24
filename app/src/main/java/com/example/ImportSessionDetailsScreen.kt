@@ -30,7 +30,8 @@ fun ImportSessionDetailsScreen(
     onNavigateToProduct: (String, String) -> Unit,
     viewModel: ImportSessionViewModel,
     productsViewModel: ProductsViewModel,
-    accountingViewModel: AccountingViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    accountingViewModel: AccountingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    settingsViewModel: SettingsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val session by viewModel.getSessionById(sessionId).collectAsState()
     val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
@@ -280,8 +281,9 @@ fun ImportSessionDetailsScreen(
                 }
 
                 if (session!!.status == ImportSessionStatus.COMPLETED && session!!.recognizedCodes.isNotEmpty()) {
-                    if (session!!.type == ImportSessionType.INVENTORY) {
+                    if (session!!.type == ImportSessionType.INVENTORY && currentAccounting == null) {
                         com.example.ui.components.ScannerSelectionBlock(
+                            settingsViewModel = settingsViewModel,
                             onSimulateScan = {
                                 viewModel.simulateInventoryScan(sessionId)
                             },
@@ -289,6 +291,18 @@ fun ImportSessionDetailsScreen(
                                 viewModel.scanCode(sessionId, code)
                             }
                         )
+                    } else if (session!!.type == ImportSessionType.INVENTORY && currentAccounting != null) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                        ) {
+                            Text(
+                                "Сессия принята к учету: ${currentAccounting.displayName}",
+                                modifier = Modifier.padding(16.dp),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
                     }
 
                     TabRow(selectedTabIndex = selectedTab) {

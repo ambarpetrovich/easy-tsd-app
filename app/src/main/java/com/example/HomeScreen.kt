@@ -35,13 +35,15 @@ fun HomeScreen(
     accountingViewModel: AccountingViewModel = viewModel(),
     pdfSessionViewModel: PdfSessionViewModel = viewModel(),
     importSessionViewModel: ImportSessionViewModel = viewModel(),
-    onNavigateToScan: () -> Unit = {},
+    scanSessionViewModel: ScanSessionViewModel = viewModel(),
+    onNavigateToScan: (String?) -> Unit = {},
     onNavigateToPdfSession: (String) -> Unit = {},
     onNavigateToImportSession: (String) -> Unit = {}
 ) {
     val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
     val pdfSessions by pdfSessionViewModel.sessions.collectAsState()
     val importSessions by importSessionViewModel.sessions.collectAsState()
+    val freeScanSessions by scanSessionViewModel.sessions.collectAsState()
     
     var showFeatureInfo by remember { mutableStateOf(false) }
 
@@ -85,14 +87,14 @@ fun HomeScreen(
                 title = "Свободное сканирование",
                 description = "Сканируйте штрих-коды без привязки к документу.",
                 icon = Icons.Default.QrCode,
-                onClick = onNavigateToScan
+                onClick = { onNavigateToScan(null) }
             )
             
             SectionHeader(title = "Предыдущие сессии")
             
             val dateFormat = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
             
-            if (pdfSessions.isEmpty() && importSessions.isEmpty()) {
+            if (pdfSessions.isEmpty() && importSessions.isEmpty() && freeScanSessions.isEmpty()) {
                 EmptyState(
                     title = "Нет сессий",
                     subtitle = "Создайте новую сессию из файлов или начните свободное сканирование"
@@ -120,6 +122,19 @@ fun HomeScreen(
                             date = session.date, 
                             type = if (session.type == ImportSessionType.RECOGNITION) "Импорт данных" else "Инвентаризация (Импорт)", 
                             codesCount = session.totalCodes,
+                            accountingType = accountingStatus[session.id]
+                        )
+                    }
+                }
+                freeScanSessions.sortedByDescending { 
+                    try { dateFormat.parse(it.date)?.time ?: 0L } catch (e: Exception) { 0L }
+                }.forEach { session ->
+                    Card(modifier = Modifier.clickable { onNavigateToScan(session.id) }) {
+                        SessionCard(
+                            title = session.title, 
+                            date = session.date, 
+                            type = "Свободное сканирование", 
+                            codesCount = session.scannedCodes.size,
                             accountingType = accountingStatus[session.id]
                         )
                     }

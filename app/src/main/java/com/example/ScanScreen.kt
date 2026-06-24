@@ -28,10 +28,22 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun ScanScreen(
     scanViewModel: ScanSessionViewModel = viewModel(),
     productsViewModel: ProductsViewModel = viewModel(),
+    accountingViewModel: AccountingViewModel = viewModel(),
+    settingsViewModel: SettingsViewModel = viewModel(),
+    initialSessionId: String? = null,
     onNavigateToProduct: (String, String) -> Unit = { _, _ -> }
 ) {
     var selectedScanner by remember { mutableStateOf("Камера") }
     val scanners = listOf("Камера", "HID-сканер", "USB-COM")
+    
+    LaunchedEffect(initialSessionId) {
+        if (initialSessionId != null) {
+            scanViewModel.selectSession(initialSessionId)
+        } else {
+            scanViewModel.createOrGetSession() // Ensure we have a session to scan into
+        }
+    }
+    
     val scannedCodes by scanViewModel.scannedCodes.collectAsState()
     
     var selectedTab by remember { mutableStateOf(0) }
@@ -39,6 +51,10 @@ fun ScanScreen(
 
     var showAccountingDialog by remember { mutableStateOf(false) }
 
+    val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
+    val currentId = scanViewModel.currentSessionId.collectAsState().value
+    val currentAccounting = currentId?.let { accountingStatus[it] }
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -61,15 +77,30 @@ fun ScanScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            com.example.ui.components.ScannerSelectionBlock(
-                onSimulateScan = {
-                    val dummy = listOf("010460123456789021ABCD123", "010469876543210921XYZ789", "010460123456789021NEW111")
-                    scanViewModel.addCode(dummy.random()) 
-                },
-                onBarcodeScanned = { code ->
-                    scanViewModel.addCode(code)
+            if (currentAccounting == null) {
+                com.example.ui.components.ScannerSelectionBlock(
+                    settingsViewModel = settingsViewModel,
+                    onSimulateScan = {
+                        val dummy = listOf("010460123456789021ABCD123", "010469876543210921XYZ789", "010460123456789021NEW111")
+                        scanViewModel.addCode(dummy.random()) 
+                    },
+                    onBarcodeScanned = { code ->
+                        scanViewModel.addCode(code)
+                    }
+                )
+            } else {
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                ) {
+                    Text(
+                        "Сессия принята к учету: ${currentAccounting.displayName}",
+                        modifier = Modifier.padding(16.dp),
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
                 }
-            )
+            }
 
             TabRow(selectedTabIndex = selectedTab) {
                 tabs.forEachIndexed { index, title ->
@@ -88,9 +119,6 @@ fun ScanScreen(
             }
             
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                val accountingViewModel: AccountingViewModel = viewModel()
-                val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
-                val currentAccounting = accountingStatus["free_scan_current"]
                 
                 if (currentAccounting != null) {
                     SuggestionChip(
@@ -140,12 +168,14 @@ fun ScanScreen(
         }
     }
     
-    if (showAccountingDialog && scannedCodes.isNotEmpty()) {
+    val currentSessionId by scanViewModel.currentSessionId.collectAsState()
+    
+    if (showAccountingDialog && scannedCodes.isNotEmpty() && currentSessionId != null) {
         com.example.ui.components.AccountingVerificationDialog(
             codes = scannedCodes.map { it.normalizedCode },
-            sessionId = "free_scan_current", // In a real app this would have a generated ID
+            sessionId = currentSessionId!!,
             sessionName = "Свободное сканирование",
-            accountingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+            accountingViewModel = accountingViewModel,
             onDismiss = { showAccountingDialog = false }
         )
     } else if (showAccountingDialog) {

@@ -29,7 +29,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 sealed class Screen(val route: String, val title: String, val icon: ImageVector) {
     object Home : Screen("home", "Начало", Icons.Filled.Home)
-    object Scan : Screen("scan", "Скан", Icons.Filled.QrCodeScanner)
+    object Scan : Screen("scan?sessionId={sessionId}", "Скан", Icons.Filled.QrCodeScanner) {
+        fun createRoute(sessionId: String? = null): String {
+            return if (sessionId != null) "scan?sessionId=$sessionId" else "scan"
+        }
+    }
     object Files : Screen("files", "Файлы", Icons.Filled.Folder)
     object Settings : Screen("settings", "Настройки", Icons.Filled.Settings)
     object History : Screen("history", "История версий", Icons.Filled.Settings)
@@ -56,6 +60,10 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val pdfSessionViewModel: PdfSessionViewModel = viewModel()
     val importSessionViewModel: ImportSessionViewModel = viewModel()
+    val accountingViewModel: AccountingViewModel = viewModel()
+    val productsViewModel: ProductsViewModel = viewModel()
+    val scanSessionViewModel: ScanSessionViewModel = viewModel()
+    val settingsViewModel: SettingsViewModel = viewModel()
     
     val bottomBarItems = listOf(
         Screen.Home,
@@ -98,19 +106,36 @@ fun AppNavigation() {
         ) {
             composable(Screen.Home.route) { 
                 HomeScreen(
-                    onNavigateToScan = { navController.navigate(Screen.Scan.route) },
+                    pdfSessionViewModel = pdfSessionViewModel,
+                    importSessionViewModel = importSessionViewModel,
+                    accountingViewModel = accountingViewModel,
+                    scanSessionViewModel = scanSessionViewModel,
+                    onNavigateToScan = { sessionId -> navController.navigate(Screen.Scan.createRoute(sessionId)) },
                     onNavigateToPdfSession = { sessionId -> navController.navigate(Screen.PdfSessionDetails.createRoute(sessionId)) },
                     onNavigateToImportSession = { sessionId -> navController.navigate(Screen.ImportSessionDetails.createRoute(sessionId)) }
                 ) 
             }
-            composable(Screen.Scan.route) { ScanScreen() }
+            composable(
+                route = Screen.Scan.route,
+                arguments = listOf(androidx.navigation.navArgument("sessionId") { type = androidx.navigation.NavType.StringType; nullable = true })
+            ) { backStackEntry -> 
+                val sessionId = backStackEntry.arguments?.getString("sessionId")
+                ScanScreen(
+                    scanViewModel = scanSessionViewModel,
+                    accountingViewModel = accountingViewModel,
+                    productsViewModel = productsViewModel,
+                    settingsViewModel = settingsViewModel,
+                    initialSessionId = sessionId
+                ) 
+            }
             composable(Screen.Files.route) { FilesScreen(
                 onNavigateToPdfSessions = { navController.navigate(Screen.PdfSessions.route) },
                 onNavigateToImportSessions = { navController.navigate(Screen.ImportSessions.route) }
             ) }
             composable(Screen.Settings.route) { SettingsScreen(
                 onNavigateToHistory = { navController.navigate(Screen.History.route) },
-                onNavigateToProducts = { navController.navigate(Screen.Products.createRoute()) }
+                onNavigateToProducts = { navController.navigate(Screen.Products.createRoute()) },
+                settingsViewModel = settingsViewModel
             ) }
             composable(Screen.History.route) { HistoryScreen(
                 onBack = { navController.popBackStack() }
@@ -127,7 +152,8 @@ fun AppNavigation() {
                 ProductsScreen(
                     onBack = { navController.popBackStack() },
                     initialAction = action,
-                    initialGtin = gtin
+                    initialGtin = gtin,
+                    viewModel = productsViewModel
                 ) 
             }
             composable(Screen.PdfSessions.route) { PdfRecognitionScreen(
@@ -142,7 +168,6 @@ fun AppNavigation() {
             ) }
             composable(Screen.PdfSessionDetails.route) { backStackEntry ->
                 val sessionId = backStackEntry.arguments?.getString("sessionId") ?: ""
-                val productsViewModel: ProductsViewModel = viewModel()
                 PdfSessionDetailsScreen(
                     sessionId = sessionId,
                     onBack = { navController.popBackStack() },
@@ -150,7 +175,9 @@ fun AppNavigation() {
                         navController.navigate(Screen.Products.createRoute(action, gtin))
                     },
                     viewModel = pdfSessionViewModel,
-                    productsViewModel = productsViewModel
+                    productsViewModel = productsViewModel,
+                    accountingViewModel = accountingViewModel,
+                    settingsViewModel = settingsViewModel
                 )
             }
             composable(Screen.ImportSessions.route) { ImportRecognitionScreen(
@@ -165,7 +192,6 @@ fun AppNavigation() {
             ) }
             composable(Screen.ImportSessionDetails.route) { backStackEntry ->
                 val sessionId = backStackEntry.arguments?.getString("sessionId") ?: ""
-                val productsViewModel: ProductsViewModel = viewModel()
                 ImportSessionDetailsScreen(
                     sessionId = sessionId,
                     onBack = { navController.popBackStack() },
@@ -173,7 +199,9 @@ fun AppNavigation() {
                         navController.navigate(Screen.Products.createRoute(action, gtin))
                     },
                     viewModel = importSessionViewModel,
-                    productsViewModel = productsViewModel
+                    productsViewModel = productsViewModel,
+                    accountingViewModel = accountingViewModel,
+                    settingsViewModel = settingsViewModel
                 )
             }
         }

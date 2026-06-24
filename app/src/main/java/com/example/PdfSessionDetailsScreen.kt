@@ -36,7 +36,8 @@ fun PdfSessionDetailsScreen(
     onNavigateToProduct: (String, String) -> Unit,
     viewModel: PdfSessionViewModel,
     productsViewModel: ProductsViewModel,
-    accountingViewModel: AccountingViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    accountingViewModel: AccountingViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    settingsViewModel: SettingsViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
     val session by viewModel.getSessionById(sessionId).collectAsState()
     val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
@@ -286,8 +287,9 @@ fun PdfSessionDetailsScreen(
                 }
 
                 if (session!!.status == PdfSessionStatus.COMPLETED && session!!.recognizedCodes.isNotEmpty()) {
-                    if (session!!.type == PdfSessionType.INVENTORY) {
+                    if (session!!.type == PdfSessionType.INVENTORY && currentAccounting == null) {
                         com.example.ui.components.ScannerSelectionBlock(
+                            settingsViewModel = settingsViewModel,
                             onSimulateScan = {
                                 viewModel.simulateInventoryScan(sessionId)
                             },
@@ -295,6 +297,18 @@ fun PdfSessionDetailsScreen(
                                 viewModel.scanCode(sessionId, code) // assuming scanCode exists or we should add it
                             }
                         )
+                    } else if (session!!.type == PdfSessionType.INVENTORY && currentAccounting != null) {
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                        ) {
+                            Text(
+                                "Сессия принята к учету: ${currentAccounting.displayName}",
+                                modifier = Modifier.padding(16.dp),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onSecondaryContainer
+                            )
+                        }
                     }
 
                     TabRow(selectedTabIndex = selectedTab) {

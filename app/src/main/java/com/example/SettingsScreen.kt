@@ -27,11 +27,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
+import androidx.compose.material.icons.filled.QrCodeScanner
+import androidx.lifecycle.viewmodel.compose.viewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onNavigateToHistory: () -> Unit,
-    onNavigateToProducts: () -> Unit
+    onNavigateToProducts: () -> Unit,
+    settingsViewModel: SettingsViewModel = viewModel()
 ) {
     var selectedTab by rememberSaveable { mutableIntStateOf(0) }
     val tabs = listOf("Системные", "Прикладные")
@@ -87,7 +91,7 @@ fun SettingsScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 if (selectedTab == 0) {
-                    SystemSettingsSection(onNavigateToHistory)
+                    SystemSettingsSection(onNavigateToHistory, settingsViewModel)
                 } else {
                     BusinessSettingsSection(onNavigateToProducts)
                 }
@@ -97,7 +101,9 @@ fun SettingsScreen(
 }
 
 @Composable
-fun SystemSettingsSection(onNavigateToHistory: () -> Unit) {
+fun SystemSettingsSection(onNavigateToHistory: () -> Unit, settingsViewModel: SettingsViewModel = viewModel()) {
+    val defaultScanner by settingsViewModel.defaultScannerMode.collectAsState()
+    
     SettingsCard(
         title = "О приложении",
         icon = Icons.Default.History,
@@ -125,6 +131,30 @@ fun SystemSettingsSection(onNavigateToHistory: () -> Unit) {
                 unfocusedContainerColor = MaterialTheme.colorScheme.background
             )
         )
+    }
+
+    SettingsCard(
+        title = "Режим сканирования по умолчанию",
+        icon = Icons.Default.QrCodeScanner
+    ) {
+        Column {
+            listOf("Камера", "HID-сканер", "USB-COM").forEach { mode ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { settingsViewModel.setDefaultScannerMode(mode) }
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(mode, fontWeight = FontWeight.Bold)
+                    RadioButton(
+                        selected = defaultScanner == mode,
+                        onClick = { settingsViewModel.setDefaultScannerMode(mode) }
+                    )
+                }
+            }
+        }
     }
 
     SettingsCard(

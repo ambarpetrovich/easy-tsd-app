@@ -21,13 +21,18 @@ import androidx.compose.ui.unit.dp
 import com.example.UsbComScanner
 import kotlinx.coroutines.delay
 
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.SettingsViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScannerSelectionBlock(
+    settingsViewModel: SettingsViewModel = viewModel(),
     onSimulateScan: () -> Unit = {},
     onBarcodeScanned: (String) -> Unit = {}
 ) {
-    var selectedScanner by remember { mutableStateOf("Камера") }
+    val defaultScanner by settingsViewModel.defaultScannerMode.collectAsState()
+    var selectedScanner by remember(defaultScanner) { mutableStateOf(defaultScanner) }
     val scanners = listOf("Камера", "HID-сканер", "USB-COM")
 
     Column(
