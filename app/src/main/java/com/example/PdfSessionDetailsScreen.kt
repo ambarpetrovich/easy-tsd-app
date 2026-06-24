@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import kotlinx.coroutines.launch
 
 val fileColors = listOf(
     Color(0xFFE57373), Color(0xFF81C784), Color(0xFF64B5F6), 
@@ -39,6 +40,8 @@ fun PdfSessionDetailsScreen(
 ) {
     val session by viewModel.getSessionById(sessionId).collectAsState()
     val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     var showFiles by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableIntStateOf(0) } // 0 - flat, 1 - grouped
@@ -63,9 +66,30 @@ fun PdfSessionDetailsScreen(
                                 expanded = showExportMenu,
                                 onDismissRequest = { showExportMenu = false }
                             ) {
-                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { showExportMenu = false })
-                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { showExportMenu = false })
-                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { showExportMenu = false })
+                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToCsv(context, it, "export_csv") }
+                                    }
+                                })
+                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToXlsxLike(context, it, "export_xlsx") }
+                                    }
+                                })
+                                DropdownMenuItem(text = { Text("В JSON") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToJson(context, it, "export_json") }
+                                    }
+                                })
+                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToXmlUpd(context, it, "export_upd") }
+                                    }
+                                })
                             }
                         }
                     }
@@ -266,6 +290,9 @@ fun PdfSessionDetailsScreen(
                         com.example.ui.components.ScannerSelectionBlock(
                             onSimulateScan = {
                                 viewModel.simulateInventoryScan(sessionId)
+                            },
+                            onBarcodeScanned = { code ->
+                                viewModel.scanCode(sessionId, code) // assuming scanCode exists or we should add it
                             }
                         )
                     }

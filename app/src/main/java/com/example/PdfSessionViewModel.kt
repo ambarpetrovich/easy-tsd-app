@@ -103,40 +103,63 @@ class PdfSessionViewModel : ViewModel() {
     }
 
     init {
-        viewModelScope.launch {
-            while(true) {
-                delay(1000)
-                _sessions.update { currentList ->
-                    currentList.map { session ->
-                        if (session.status == PdfSessionStatus.PENDING) {
-                            session.copy(status = PdfSessionStatus.IN_PROGRESS)
-                        } else if (session.status == PdfSessionStatus.IN_PROGRESS) {
-                            val newProgress = session.progress + 0.1f
-                            if (newProgress >= 1f) {
-                                session.copy(status = PdfSessionStatus.COMPLETED, progress = 1f, totalCodes = (50..300).random())
-                            } else {
-                                session.copy(progress = newProgress)
-                            }
-                        } else {
-                            session
-                        }
-                    }
-                }
-            }
-        }
+        // Mock progress update removed, now using actual PDF extraction
     }
 
-    fun createSession(filenames: List<String>) {
+    fun createSession(uris: List<android.net.Uri>, filenames: List<String>, context: android.content.Context) {
         val format = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault())
         val dateStr = format.format(Date())
         val title = if (filenames.size == 1) filenames.first() else "Сессия из ${filenames.size} файлов"
+        val sessionId = UUID.randomUUID().toString()
+        val pdfFiles = filenames.map { PdfFile(it, 1, 0) } // We don't have page counts yet without parsing
+        
         val newSession = PdfSession(
-            id = UUID.randomUUID().toString(),
+            id = sessionId,
             title = title,
             date = dateStr,
-            status = PdfSessionStatus.PENDING
+            status = PdfSessionStatus.PENDING,
+            files = pdfFiles
         )
         _sessions.update { listOf(newSession) + it }
+        
+        viewModelScope.launch {
+            _sessions.update { currentList ->
+                currentList.map { if (it.id == sessionId) it.copy(status = PdfSessionStatus.IN_PROGRESS, progress = 0.1f) else it }
+            }
+            
+            val allExtractedCodes = mutableListOf<String>()
+            
+            for (i in uris.indices) {
+                val uri = uris[i]
+                val extracted = PdfBarcodeExtractor.extractBarcodes(context, uri)
+                allExtractedCodes.addAll(extracted)
+                
+                val currentProgress = 0.1f + (0.8f * (i + 1) / uris.size)
+                _sessions.update { currentList ->
+                    currentList.map { if (it.id == sessionId) it.copy(progress = currentProgress) else it }
+                }
+            }
+            
+            val recognized = allExtractedCodes.distinct().map { fullCode ->
+                val gtin = if (fullCode.contains("01") && fullCode.length > 16) fullCode.substringAfter("01").take(14) else "UNKNOWN"
+                val normalized = if (fullCode.contains("21")) {
+                    val s1 = fullCode.substringAfter("01").take(14)
+                    val s2 = fullCode.substringAfter("21").takeWhile { it != '\u001D' }
+                    "01${s1}21${s2}"
+                } else fullCode
+                
+                RecognizedCode(fullCode, normalized, gtin, 0, 1)
+            }
+            
+            _sessions.update { currentList ->
+                currentList.map { if (it.id == sessionId) it.copy(
+                    status = PdfSessionStatus.COMPLETED, 
+                    progress = 1f,
+                    totalCodes = recognized.size,
+                    recognizedCodes = recognized
+                ) else it }
+            }
+        }
     }
 
     fun startInventory(id: String) {
@@ -150,6 +173,19 @@ class PdfSessionViewModel : ViewModel() {
                         ScannedCode("010460123456789021UNKNOWN123", System.currentTimeMillis()) // unknown code
                     )
                     session.copy(type = PdfSessionType.INVENTORY, scannedCodes = mockScanned)
+                } else {
+                    session
+                }
+            }
+        }
+    }
+
+    fun scanCode(id: String, code: String) {
+        _sessions.update { currentList ->
+            currentList.map { session ->
+                if (session.id == id) {
+                    val newScan = ScannedCode(code, System.currentTimeMillis())
+                    session.copy(scannedCodes = session.scannedCodes + newScan)
                 } else {
                     session
                 }

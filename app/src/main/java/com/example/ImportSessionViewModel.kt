@@ -157,6 +157,19 @@ class ImportSessionViewModel : ViewModel() {
         }
     }
 
+    fun scanCode(id: String, code: String) {
+        _sessions.update { currentList ->
+            currentList.map { session ->
+                if (session.id == id) {
+                    val newScan = ImportScannedCode(code, System.currentTimeMillis())
+                    session.copy(scannedCodes = session.scannedCodes + newScan)
+                } else {
+                    session
+                }
+            }
+        }
+    }
+
     fun simulateInventoryScan(id: String) {
         _sessions.update { currentList ->
             currentList.map { session ->

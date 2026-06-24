@@ -8,13 +8,24 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.UsbComScanner
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ScannerSelectionBlock(
-    onSimulateScan: () -> Unit = {}
+    onSimulateScan: () -> Unit = {},
+    onBarcodeScanned: (String) -> Unit = {}
 ) {
     var selectedScanner by remember { mutableStateOf("Камера") }
     val scanners = listOf("Камера", "HID-сканер", "USB-COM")
@@ -39,53 +50,149 @@ fun ScannerSelectionBlock(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (selectedScanner == "Камера") {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.medium)
-                    .padding(2.dp)
-                    .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)),
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Icon(
-                        imageVector = Icons.Default.CameraAlt,
-                        contentDescription = "Camera",
-                        modifier = Modifier.size(48.dp),
-                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = "Камера активна",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                    )
-                    Button(onClick = onSimulateScan, modifier = Modifier.padding(top = 8.dp)) {
-                        Text("Эмулировать")
-                    }
+        when (selectedScanner) {
+            "Камера" -> {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp)
+                        .background(MaterialTheme.colorScheme.surface, shape = MaterialTheme.shapes.medium)
+                        .padding(2.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CameraScanner(onBarcodeScanned = { code -> 
+                        onBarcodeScanned(code)
+                    })
                 }
             }
-        } else {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.outline)
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "Наведите сканер на штрих-код",
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Button(onClick = onSimulateScan) { Text("Эмулировать") }
-                }
+            "HID-сканер" -> {
+                HidScannerView(onBarcodeScanned, onSimulateScan)
+            }
+            "USB-COM" -> {
+                UsbComScannerView(onBarcodeScanned, onSimulateScan)
             }
         }
     }
 }
+
+@Composable
+fun HidScannerView(onBarcodeScanned: (String) -> Unit, onSimulateScan: () -> Unit) {
+    var text by remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        delay(100) // Small delay to ensure view is ready
+        focusRequester.requestFocus()
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.outline)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "HID-сканер (Клавиатура)",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Наведите сканер на штрих-код",
+                style = MaterialTheme.typography.bodyMedium
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            OutlinedTextField(
+                value = text,
+                onValueChange = {
+                    if (it.contains("\n") || it.contains("\r")) {
+                        val code = it.replace("\n", "").replace("\r", "").trim()
+                        if (code.isNotEmpty()) onBarcodeScanned(code)
+                        text = ""
+                    } else {
+                        text = it
+                    }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                    .onKeyEvent { keyEvent ->
+                        if (keyEvent.type == KeyEventType.KeyUp && 
+                            (keyEvent.key == Key.Enter || keyEvent.key == Key.NumPadEnter)) {
+                            if (text.isNotBlank()) {
+                                onBarcodeScanned(text.trim())
+                                text = ""
+                            }
+                            true
+                        } else {
+                            false
+                        }
+                    },
+                placeholder = { Text("Ожидание ввода...") },
+                singleLine = true
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = onSimulateScan) { Text("Эмулировать") }
+        }
+    }
+}
+
+@Composable
+fun UsbComScannerView(onBarcodeScanned: (String) -> Unit, onSimulateScan: () -> Unit) {
+    val context = LocalContext.current
+    val usbComScanner = remember { UsbComScanner(context) }
+    var status by remember { mutableStateOf("Инициализация...") }
+
+    LaunchedEffect(usbComScanner) {
+        usbComScanner.autoConnect()
+    }
+
+    LaunchedEffect(usbComScanner) {
+        usbComScanner.statusFlow.collect { newStatus ->
+            status = newStatus
+        }
+    }
+
+    LaunchedEffect(usbComScanner) {
+        usbComScanner.barcodeFlow.collect { barcode ->
+            onBarcodeScanned(barcode)
+        }
+    }
+
+    DisposableEffect(usbComScanner) {
+        onDispose {
+            usbComScanner.destroy()
+        }
+    }
+
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        border = androidx.compose.foundation.BorderStroke(2.dp, MaterialTheme.colorScheme.outline)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp).fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "USB-COM сканер",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Статус: $status",
+                style = MaterialTheme.typography.bodyMedium,
+                color = if (status == "Подключено") MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = { usbComScanner.autoConnect() }) { Text("Переподключить") }
+            Spacer(modifier = Modifier.height(8.dp))
+            Button(onClick = onSimulateScan) { Text("Эмулировать") }
+        }
+    }
+}
+

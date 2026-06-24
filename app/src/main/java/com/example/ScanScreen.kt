@@ -65,6 +65,9 @@ fun ScanScreen(
                 onSimulateScan = {
                     val dummy = listOf("010460123456789021ABCD123", "010469876543210921XYZ789", "010460123456789021NEW111")
                     scanViewModel.addCode(dummy.random()) 
+                },
+                onBarcodeScanned = { code ->
+                    scanViewModel.addCode(code)
                 }
             )
 

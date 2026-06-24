@@ -16,6 +16,34 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.ui.components.EmptyState
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.ui.platform.LocalContext
+import android.content.Context
+import android.provider.OpenableColumns
+import android.net.Uri
+
+fun getFileName(context: Context, uri: Uri): String? {
+    var result: String? = null
+    if (uri.scheme == "content") {
+        context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+            if (cursor.moveToFirst()) {
+                val index = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (index != -1) {
+                    result = cursor.getString(index)
+                }
+            }
+        }
+    }
+    if (result == null) {
+        result = uri.path
+        val cut = result?.lastIndexOf('/') ?: -1
+        if (cut != -1) {
+            result = result?.substring(cut + 1)
+        }
+    }
+    return result
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -163,7 +191,20 @@ fun CreatePdfSessionScreen(
     onBack: () -> Unit,
     viewModel: PdfSessionViewModel = viewModel()
 ) {
+    val context = LocalContext.current
+    val selectedUris = remember { mutableStateListOf<android.net.Uri>() }
     val selectedFiles = remember { mutableStateListOf<String>() }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetMultipleContents(),
+        onResult = { uris ->
+            uris.forEach { uri ->
+                selectedUris.add(uri)
+                val fileName = getFileName(context, uri) ?: "Неизвестный_документ.pdf"
+                selectedFiles.add(fileName)
+            }
+        }
+    )
 
     Scaffold(
         topBar = {
@@ -191,8 +232,7 @@ fun CreatePdfSessionScreen(
         ) {
             Button(
                 onClick = { 
-                    // Simulate file selection
-                    selectedFiles.add("Документ_${selectedFiles.size + 1}.pdf")
+                    launcher.launch("application/pdf")
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
@@ -230,7 +270,10 @@ fun CreatePdfSessionScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(selectedFiles[index], modifier = Modifier.weight(1f))
-                                IconButton(onClick = { selectedFiles.removeAt(index) }) {
+                                IconButton(onClick = { 
+                                    selectedFiles.removeAt(index)
+                                    selectedUris.removeAt(index)
+                                }) {
                                     Icon(Icons.Default.Delete, contentDescription = "Удалить", tint = MaterialTheme.colorScheme.error)
                                 }
                             }
@@ -242,7 +285,7 @@ fun CreatePdfSessionScreen(
             Button(
                 onClick = {
                     if (selectedFiles.isNotEmpty()) {
-                        viewModel.createSession(selectedFiles.toList())
+                        viewModel.createSession(selectedUris.toList(), selectedFiles.toList(), context)
                         onBack()
                     }
                 },

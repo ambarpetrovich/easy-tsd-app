@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +34,8 @@ fun ImportSessionDetailsScreen(
 ) {
     val session by viewModel.getSessionById(sessionId).collectAsState()
     val accountingStatus by accountingViewModel.sessionAccountingStatus.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
 
     var showFiles by remember { mutableStateOf(false) }
     var selectedTab by remember { mutableIntStateOf(0) } // 0 - flat, 1 - grouped
@@ -57,9 +60,30 @@ fun ImportSessionDetailsScreen(
                                 expanded = showExportMenu,
                                 onDismissRequest = { showExportMenu = false }
                             ) {
-                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { showExportMenu = false })
-                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { showExportMenu = false })
-                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { showExportMenu = false })
+                                DropdownMenuItem(text = { Text("В CSV") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToCsv(context, it, "export_csv") }
+                                    }
+                                })
+                                DropdownMenuItem(text = { Text("В XLSX") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToXlsxLike(context, it, "export_xlsx") }
+                                    }
+                                })
+                                DropdownMenuItem(text = { Text("В JSON") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToJson(context, it, "export_json") }
+                                    }
+                                })
+                                DropdownMenuItem(text = { Text("В XML-УПД") }, onClick = { 
+                                    showExportMenu = false
+                                    session?.let { 
+                                        coroutineScope.launch { ExportService.exportToXmlUpd(context, it, "export_upd") }
+                                    }
+                                })
                             }
                         }
                     }
@@ -260,6 +284,9 @@ fun ImportSessionDetailsScreen(
                         com.example.ui.components.ScannerSelectionBlock(
                             onSimulateScan = {
                                 viewModel.simulateInventoryScan(sessionId)
+                            },
+                            onBarcodeScanned = { code ->
+                                viewModel.scanCode(sessionId, code)
                             }
                         )
                     }
